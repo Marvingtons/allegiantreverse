@@ -3,25 +3,931 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Tokens are doubled: bare RGB channels for Tailwind's alpha modifier, so
+     text-paper/60 compiles to rgb(var(--paper-rgb) / 0.6), plus a resolved
+     colour for hand-written CSS. Tailwind v3 cannot apply an alpha modifier to
+     a var() holding a hex — a single hex token silently drops every /nn class
+     that uses it, which is exactly how the ink section lost its type contrast
+     the first time round. */
+  /* ONE system across fog and paper (cohesion pass): brand navy carries the
+     accent role everywhere — the recorder's-stamp teal is retired. The
+     `stamp` token NAME survives (it is referenced across the tree) but it
+     now resolves to navy; treat "stamp" as "accent". */
+  /* Paper is FOG-WHITE, not cream: the whole site sits in the same weather
+     as the hero. A warm cream page after a cool fog hero read as two sites
+     bolted together — this is the last step of the cohesion pass, and it is
+     why --fog-3 below is exactly this value (the fog does not dissolve INTO
+     the paper any more; its warm end simply IS the paper). */
+  --paper-rgb: 231 234 236; /* fog white (#E7EAEC) */
+  --ink-rgb: 31 33 36; /* near-black — editorial headlines & body (#1F2124) */
+  --navy-rgb: 5 49 96; /* brand primary — statements on fog, CTAs, links */
+  --navy2-rgb: 4 38 75; /* hover / pressed navy */
+  /* Steel is 3 points darker than the spec's #5B6F87. On cream that value
+     cleared AA at 4.55:1; against fog-white and the fog ramp it falls to
+     4.2–4.3:1, and every eyebrow on the site is 11px normal text. This
+     passes on the darkest ground steel sits on (--fog-2, 4.6:1). */
+  --steel-rgb: 78 97 122; /* #4E617A — secondary labels, eyebrows, both worlds */
+  --gold-rgb: 216 192 135; /* logo gold — logo + one highlight word max */
+  --gold2-rgb: 138 116 63; /* gold on light backgrounds at text size */
+
+  /* Cards and inputs sat on cream as "paper on paper", separated by their
+     border alone. On fog-white that reads as flat, so surfaces get a lift
+     off the ground rather than matching it. */
+  --surface-rgb: 241 244 245;
+
+  --stamp-rgb: 5 49 96; /* = navy: the accent role (legacy name) */
+  --stamp-soft-rgb: 214 221 228; /* navy tint — hover fills, section tints */
+  --rule-rgb: 203 208 212; /* hairlines = ink at 12% over fog-white */
+  --muted-rgb: 74 76 79; /* body-secondary = ink at ~80% over paper */
+
+  /* Accent on the ink-ground sections, where full navy has no contrast. */
+  --stamp-lift-rgb: 74 107 148;
+  --stamp-bright-rgb: 143 169 199;
+
+  /* The fog ramp — every fog gradient builds from these, so a section
+     boundary can never drift. fog-3 IS --paper: the ramp lands on the page
+     colour exactly, so fog and page are one continuous atmosphere.
+     Channels are exposed because fog gradients must fade to a TRANSPARENT
+     VERSION OF THEMSELVES: fading to the `transparent` keyword drifts the
+     midpoint toward neutral, which is exactly the grey murk that made the
+     rising cover look like a dirty wash instead of cloud. */
+  --fog-0-rgb: 195 201 206;
+  --fog-1-rgb: 206 210 214;
+  --fog-2-rgb: 218 221 224;
+  --fog-3-rgb: 231 234 236;
+  --fog-0: rgb(var(--fog-0-rgb));
+  --fog-1: rgb(var(--fog-1-rgb));
+  --fog-2: rgb(var(--fog-2-rgb));
+  --fog-3: rgb(var(--fog-3-rgb));
+
+  --paper: rgb(var(--paper-rgb));
+  --ink: rgb(var(--ink-rgb));
+  --navy: rgb(var(--navy-rgb));
+  --navy-2: rgb(var(--navy2-rgb));
+  --steel: rgb(var(--steel-rgb));
+  --gold: rgb(var(--gold-rgb));
+  --gold-2: rgb(var(--gold2-rgb));
+  --stamp: rgb(var(--stamp-rgb));
+  --stamp-soft: rgb(var(--stamp-soft-rgb));
+  --rule: rgb(var(--rule-rgb));
+  --muted: rgb(var(--muted-rgb));
+  --stamp-lift: rgb(var(--stamp-lift-rgb));
+  --stamp-bright: rgb(var(--stamp-bright-rgb));
 }
 
-@media (prefers-color-scheme: dark) {
+@layer base {
+  html {
+    /* 18px base — senior-legible by default rather than by zoom.
+       Expressed as a percentage, not px, so a reader who has raised their
+       browser default still gets their setting, scaled. */
+    font-size: 112.5%;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    position: relative;
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Site-wide atmosphere. Fog-white is a cool, quiet ground — flat across a
+     full editorial page it reads as wireframe grey, where cream read as
+     paper. This soft standing light restores the depth the fog sections get
+     from their cloud plates: a fixed, composited layer behind everything
+     (never background-attachment: fixed, which repaints on every scroll). */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(95% 55% at 50% -8%, rgb(255 255 255 / 0.75), transparent 62%),
+      radial-gradient(75% 55% at 88% 104%, rgb(188 200 211 / 0.4), transparent 68%),
+      radial-gradient(60% 45% at 4% 88%, rgb(196 206 215 / 0.28), transparent 70%);
+  }
+
+  /* Every numeral in this site is a figure in a document: align the columns. */
+  .tabular,
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--stamp);
+    color: var(--paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--stamp);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  /* On the one dark section, the navy ring would disappear into ink. */
+  .on-ink :focus-visible {
+    outline-color: var(--paper);
+  }
+
+  /* ONE eyebrow spec, ground-aware colour. Steel is the light-ground value;
+     on ink it drops to 2.6:1, so the token flips rather than every caller
+     passing an override (which is how the footer's labels silently lost
+     their colour to the unified `text-steel` class). */
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --eyebrow-fg: rgb(var(--steel-rgb));
+  }
+
+  .on-ink {
+    --eyebrow-fg: rgb(var(--paper-rgb) / 0.72);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* ---- Readiness gate --------------------------------------------------
+     Scroll is held until the globe has a drawn frame. Both halves matter:
+     Lenis is stopped in JS, and this blocks the native scrollbar, keyboard
+     paging and the trackpad fallback that Lenis does not own. It does NOT
+     block window.scrollTo — the session-skip jump still lands. */
+  .scroll-locked,
+  .scroll-locked body {
+    overflow: hidden;
+  }
+
+  .ready-gate {
+    position: fixed;
+    left: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    pointer-events: none;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    color: rgb(var(--ink-rgb) / 0.55);
+    animation: readyGateIn 0.5s ease both;
+  }
+
+  .ready-gate-num {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ready-gate-pct {
+    opacity: 0.5;
+    margin-left: 0.15em;
+  }
+
+  .ready-gate-note {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--ink-rgb) / 0.38);
+    animation: readyGateIn 0.6s ease both;
+  }
+
+  @keyframes readyGateIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ready-gate,
+    .ready-gate-note {
+      animation: none;
+    }
+  }
+
+  /* Paper grain. A single inline SVG turbulence tile at <= 3% opacity — enough
+     to keep large flat fields from reading as a screen, invisible as texture. */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .shell {
+    width: 100%;
+    max-width: theme("maxWidth.shell");
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 3rem;
+    }
+  }
+
+  /* Left-to-right rule draw on hover — used on every footer and nav link. */
+  .rule-link {
+    position: relative;
+    display: inline-block;
+  }
+
+  .rule-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.15em;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rule-link:hover::after,
+  .rule-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rule-link::after {
+      transition: none;
+    }
+  }
+
+  /* The Desk ships two layouts: a pinned portrait frame, and a plain vertical
+     stack of cards. Which one shows is decided by CSS alone — a media query,
+     not a client-side width check — so the server HTML is correct on arrival,
+     there is no hydration mismatch, and no first-paint flash of the wrong one.
+     The stack is also the no-JS and reduced-motion answer. */
+  .desk-stack {
+    display: block;
+  }
+
+  .desk-pinned {
+    display: none;
+  }
+
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .desk-stack {
+      display: none;
+    }
+
+    .desk-pinned {
+      display: block;
+    }
+  }
+
+  /* ---- Fog hero — the cinematic opening --------------------------------
+     Same two-layout convention as The Desk: CSS decides which hero shows,
+     so the server HTML is right on arrival. The cinema needs a real
+     pointer, a desktop viewport, and motion; everyone else gets the
+     type-only hero (which is also the WebGL failure path, swapped in JS). */
+  .fog-cinema {
+    display: none;
+    /* The stage paints OVER Who We Are, which is pulled up underneath it. */
+    z-index: 2;
+  }
+
+  .fog-fallback {
+    display: block;
+  }
+
+  @media (min-width: 900px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .fog-cinema {
+      display: block;
+    }
+
+    .fog-fallback {
+      display: none;
+    }
+  }
+
+  /* Gold is FOIL — this sequence and the landing line's one word are the
+     only places it exists on the site. */
+  .fog-stage {
+    --gold-deep: #8c6a2f;
+    /* Type gold matches the logo's foil (#D8C087); the shader keeps its own
+       ramp — the two read as one metal on screen. */
+    --gold-mid: #d8c087;
+    --gold-high: #efd9a7;
+    /* Scrub-interpolated by the render loop: ink on fog → paper in space. */
+    --beat-ink: rgb(26 26 23);
+    background: #0b0b09;
+  }
+
+  /* The DOM fog: the designed first frame AND the preloader. Matched to the
+     scene's fog tone (near-white into blue-grey) so the canvas crossfade
+     under it is invisible. Drift is time-based CSS; the scrub adds lateral
+     in JS. */
+  .fog-wrap {
+    background: linear-gradient(180deg, #e9e9e4 0%, #d3d9da 55%, #c2cbcd 100%);
+  }
+
+  .fog-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(70px);
+    will-change: transform;
+  }
+
+  .fog-blob-1 {
+    left: -10%;
+    top: -15%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(closest-side, rgb(247 245 240 / 0.95), transparent);
+    animation: fogDriftA 47s ease-in-out infinite alternate;
+  }
+
+  .fog-blob-2 {
+    right: -15%;
+    top: 15%;
+    width: 80%;
+    height: 75%;
+    background: radial-gradient(closest-side, rgb(214 223 229 / 0.85), transparent);
+    animation: fogDriftB 59s ease-in-out infinite alternate;
+  }
+
+  .fog-blob-3 {
+    left: 10%;
+    bottom: -20%;
+    width: 85%;
+    height: 65%;
+    background: radial-gradient(closest-side, rgb(236 236 230 / 0.8), transparent);
+    animation: fogDriftA 71s ease-in-out infinite alternate-reverse;
+  }
+
+  /* Failure path: the fog parts (opacity out) into the type-only hero. */
+  .fog-part {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+    background: linear-gradient(180deg, #e9e9e4 0%, #d3d9da 55%, #c2cbcd 100%);
+    animation: fogPart 0.8s ease forwards;
+  }
+
+  /* ---- Brand lockup (beat 0 of the scroll story) ------------------------ */
+  .intro-lockup {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    width: fit-content;
+  }
+
+  .intro-divider {
+    width: 1px;
+    height: 74px;
+    background: #9aa2aa;
+    transform-origin: top;
+  }
+
+  .intro-name {
+    display: flex;
+    font-family: theme("fontFamily.display");
+    font-size: 1.9rem;
+    letter-spacing: 0.3em;
+    color: var(--navy);
+  }
+
+  .intro-name [data-letter] {
+    display: inline-block;
+  }
+
+  .intro-eyebrow {
+    margin-top: 0.55rem;
+    font-family: theme("fontFamily.mono");
+    font-size: 10px;
+    letter-spacing: 0.46em; /* lockup-internal spacing, part of the mark */
+    text-transform: uppercase;
+    /* Navy, not steel: measured against the fog actually painted behind the
+       lockup (rgb(202,206,205) — darker than page paper), steel lands at
+       3.99:1. This reads at 4.97:1 and ties the sub-line to the wordmark. */
+    color: rgb(var(--navy-rgb) / 0.78);
+  }
+
+  /* ---- Into-the-fog cover (final phase of the hero stage) --------------- */
+  /* The site's fog is CSS gradient plates (hero fog-blobs) — the cover banks
+     reuse that exact weather language at bank scale. Transform-only motion. */
+  /* NO LIVE BLUR ANYWHERE IN THE TRANSITION. The decks were 11 elements at
+     30–70vw each carrying filter: blur(44–70px), transformed every scroll
+     frame next to a WebGL canvas — an enormous per-frame raster that froze
+     the renderer on the live site. The blur is a constant, so it is baked
+     into two sprites (scripts/bake-fog.mjs); only transform and opacity
+     animate now. */
+  .cover-group,
+  .cover-fill {
+    position: absolute;
+    left: -14%;
+    top: 0;
+    width: 128%;
+    height: 130vh;
+    z-index: 4;
+    pointer-events: none;
+    /* Only the two group wrappers get a layer — not the individual puffs. */
+    will-change: transform;
+  }
+
+  /* Each deck is one pre-blurred sprite: puffs, tonal variation and the
+     irregular crown line are all in the texture. The band sits at the top of
+     the group; the fill below carries the body. */
+  .cover-deck-sprite {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    /* Aspect-correct for the 1840x760 bake. Squashing the sprite vertically
+       re-hardens the blur it was baked to carry, which is the whole point of
+       baking it: 1843 / (1840/760) = 761px = 84vh at the 900px design height. */
+    height: 84vh;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: 100% 100%;
+  }
+
+  .cover-deck-front {
+    background-image: url("/textures/fog-front.webp");
+  }
+
+  .cover-deck-back {
+    background-image: url("/textures/fog-back.webp");
+  }
+
+  /* The solid mass under the puffs. Its top still ramps over ~9vh (≈80px at
+     900px tall — well past the 40px feather floor, so it contributes no edge
+     of its own) but commits to solid quickly: a long lazy ramp over black
+     space is exactly what reads as grey murk. */
+  .cover-fill {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--fog-1-rgb) / 0) 0%,
+      rgb(var(--fog-1-rgb) / 0.45) 3.5%,
+      rgb(var(--fog-1-rgb) / 0.85) 6.5%,
+      var(--fog-1) 9%,
+      var(--fog-0) 100%
+    );
+  }
+
+  /* Front deck only: a slow horizontal breath, independent of scroll. */
+  .cover-drift {
+    animation: coverDrift 26s ease-in-out infinite alternate;
+  }
+
+  .cover-tint {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    /* Built from the shared fog ramp: this layer's LAST stop is exactly the
+       next section's FIRST stop, so the boundary cannot drift. */
+    background: linear-gradient(180deg, var(--fog-0) 0%, var(--fog-1) 100%);
+  }
+
+  /* ---- Who We Are (pale-fog statement section) -------------------------- */
+  .wwa {
+    position: relative;
+    z-index: 1; /* behind .fog-cinema — the stage dissolves to reveal this */
+    min-height: 145vh;
+    /* Opens on the exact stop the cover tint ended on (--fog-1) and bottoms
+       out into the warm end of the ramp; -1px covers subpixel rounding. */
+    margin-top: -1px;
+    background: linear-gradient(180deg, var(--fog-1) 0%, var(--fog-2) 48%, var(--fog-3) 100%);
+  }
+
+  /* The stage's 100vh scroll-away used to be dead scroll: a finished,
+     motionless cover with the statement still a viewport-and-a-half below.
+     This section is pulled up underneath the stage instead, so the cover
+     completes and the statement arrives on the same scroll.
+     The pull is 170vh, not 100vh, because the stage starts DISSOLVING ~42vh
+     before its own box ends — for those frames the top of the viewport must
+     already be this section's ground, or it falls through to page paper and
+     prints a hard band across the frame. (An ::before extension does not
+     work here: .wwa is overflow: hidden, so anything outside its box is
+     clipped away. The box itself has to be taller.)
+     min-height and padding-top grow by the same 170vh - 100vh = 70vh, so the
+     statement lands on exactly the scroll position it did before and the
+     section still ends where Services begins. */
+  @media (min-width: 900px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .wwa {
+      margin-top: -170vh;
+      min-height: 215vh;
+      /* Same ramp, re-stopped for the taller box: the added 70vh at the top
+         is flat --fog-1, which is exactly the tone the dissolving stage
+         hands over, so the handoff has no boundary at all. */
+      background: linear-gradient(
+        180deg,
+        var(--fog-1) 0%,
+        var(--fog-1) 32.5%,
+        var(--fog-2) 66%,
+        var(--fog-3) 100%
+      );
+    }
+  }
+
+  /* Below the cinema breakpoint there is no cover transition above this
+     section — the type hero's paper meets the fog directly. Feather the fog
+     up out of the paper instead of cutting to it. */
+  @media (max-width: 899px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .wwa::before {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      top: 0;
+      height: 14vh;
+      background: linear-gradient(180deg, rgb(var(--paper-rgb)) 0%, transparent 100%);
+      pointer-events: none;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .wwa {
+      min-height: 120vh;
+    }
+  }
+
+  .wwa-shell {
+    position: relative;
+    z-index: 2; /* between the back/mid clouds and the front pair */
+    max-width: 1500px;
+    margin-inline: auto;
+    padding: 9vh 1.5rem 34vh;
+  }
+
+  /* Pairs with the -170vh pull on .wwa above: the box grows upward by 70vh
+     and the shell's top padding grows by the same 70vh, so the statement
+     lands on exactly the scroll position it had before the section was
+     extended. This lives AFTER .wwa-shell rather than beside the .wwa
+     override because a media query carries no extra specificity — placed
+     earlier, the base shorthand simply won and the padding never applied. */
+  @media (min-width: 900px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .wwa-shell {
+      padding-top: 79vh;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .wwa-shell {
+      padding-inline: 3rem;
+    }
+  }
+
+  .wwa-statement {
+    margin-left: auto;
+    max-width: 15em;
+    font-family: theme("fontFamily.display");
+    font-size: clamp(32px, 3.6vw, 58px);
+    line-height: 1.3;
+    letter-spacing: 0.045em;
+    color: var(--navy);
+  }
+
+  .wwa-line-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .wwa-line {
+    display: block;
+  }
+
+  .wwa-sidebar {
+    margin-top: 26vh;
+    display: flex;
+    gap: 56px;
+    max-width: 640px;
+  }
+
+  .wwa-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-family: theme("fontFamily.mono");
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--steel);
+    white-space: nowrap;
+    padding-top: 0.35em;
+  }
+
+  .wwa-rule {
+    width: 1px;
+    height: 38px;
+    background: rgb(var(--steel-rgb) / 0.25); /* dividers on fog: steel 25% */
+    flex: none;
+  }
+
+  .wwa-copy {
+    font-weight: 300;
+    font-size: clamp(16px, 1.25vw, 19px);
+    line-height: 1.75;
+    color: #3a4149;
+    max-width: 34ch;
+  }
+
+  @media (max-width: 639px) {
+    .wwa-statement {
+      max-width: none;
+    }
+
+    .wwa-sidebar {
+      margin-top: 18vh;
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+
+  /* Cloud plates — same gradient-fog language as the hero. Transform-only. */
+  .wwa-cloud {
+    position: absolute;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .wwa-cloud-b1 {
+    top: 6%;
+    left: -14%;
+    width: 85%;
+    height: 55vh;
+    background: radial-gradient(closest-side, rgb(238 240 241 / 0.85), transparent);
+    filter: blur(46px);
+    z-index: 0;
+  }
+
+  .wwa-cloud-b2 {
+    top: 34%;
+    right: -16%;
+    width: 90%;
+    height: 60vh;
+    background: radial-gradient(closest-side, rgb(228 232 234 / 0.8), transparent);
+    filter: blur(50px);
+    z-index: 0;
+  }
+
+  .wwa-cloud-m1 {
+    top: 22%;
+    left: 8%;
+    width: 62%;
+    height: 44vh;
+    background: radial-gradient(closest-side, rgb(242 244 244 / 0.75), transparent);
+    filter: blur(36px);
+    z-index: 1;
+  }
+
+  .wwa-cloud-m2 {
+    top: 56%;
+    right: 2%;
+    width: 66%;
+    height: 46vh;
+    background: radial-gradient(closest-side, rgb(233 236 238 / 0.72), transparent);
+    filter: blur(38px);
+    z-index: 1;
+  }
+
+  .wwa-cloud-f1 {
+    top: 30%;
+    left: -6%;
+    width: 58%;
+    height: 36vh;
+    background: radial-gradient(closest-side, rgb(246 247 247 / 0.66), transparent);
+    filter: blur(26px);
+    z-index: 3; /* in FRONT of the text — wisps pass over the words */
+  }
+
+  .wwa-cloud-f2 {
+    top: 62%;
+    right: -8%;
+    width: 54%;
+    height: 34vh;
+    background: radial-gradient(closest-side, rgb(240 242 242 / 0.6), transparent);
+    filter: blur(24px);
+    z-index: 3;
+  }
+
+  /* The fog dissolves into the paper — no seam, no opacity snap. */
+  .wwa-to-paper {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 34vh;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, rgb(var(--paper-rgb)) 100%);
+  }
+
+  /* Vignette over the canvas — darker corners, the globe floats, no starfield. */
+  .hero-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 75% 70% at 50% 46%,
+      transparent 55%,
+      rgb(0 0 0 / 0.2) 100%
+    );
+  }
+
+  /* Text beats: Zodiak, lower-third, one at a time. Reveals are mask-up; the
+     render loop drives the inner line's translate and the wrapper's dissolve. */
+  .beat {
+    font-family: theme("fontFamily.display");
+    font-size: clamp(2.2rem, 4.5vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--beat-ink);
+    /* Scrub-driven halo: zero while the type is ink on fog, soft dark glow
+       once it swaps to paper over the mid-tone descent. */
+    text-shadow:
+      0 1px 26px rgb(11 11 9 / var(--beat-halo, 0)),
+      0 1px 8px rgb(11 11 9 / calc(var(--beat-halo, 0) * 0.55));
+  }
+
+  .beat-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .beat-line {
+    display: block;
+  }
+
+  /* Landing line: composed by GlobeScene at the settle (.show), sealed by the
+     one-time foil pass (.foil) synced with the shader sweep. */
+  #hero-landing {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  #hero-landing.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #hero-landing .cue {
+    opacity: 0;
+    transition: opacity 0.6s ease 0.6s;
+  }
+
+  #hero-landing.show .cue {
+    opacity: 1;
+  }
+
+  /* The ONE place gold touches type. Base state is body brass; the foil pass
+     runs a highlight band across it once and settles back on gold. */
+  #hero-landing .foil-word {
+    color: var(--gold-mid);
+  }
+
+  #hero-landing.foil .foil-word {
+    background: linear-gradient(
+      105deg,
+      var(--gold-mid) 0%,
+      var(--gold-mid) 26%,
+      var(--gold-high) 31%,
+      #fff7e0 33%,
+      var(--gold-high) 35%,
+      var(--gold-mid) 46%,
+      var(--gold-mid) 100%
+    );
+    background-size: 300% 100%;
+    background-position: 0% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: foilPass 1.1s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+  }
+
+  /* Roseville HQ marker — gold dot + expanding ring, pings with the sweep. */
+  .hq-marker {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    transform: translate(10px, -50%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+
+  .hq-marker.on {
+    opacity: 1;
+  }
+
+  .hq-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #efd9a7;
+    box-shadow: 0 0 10px 2px rgb(239 217 167 / 0.55);
+    flex: none;
+  }
+
+  .hq-ring {
+    position: absolute;
+    left: 3.5px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border-radius: 50%;
+    border: 1px solid #efd9a7;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .hq-marker.on .hq-ring {
+    animation: hqPing 1.2s ease-out 1;
+  }
+
+  .hq-text {
+    font-family: theme("fontFamily.mono");
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    white-space: nowrap;
+    color: rgb(var(--paper-rgb));
+    text-shadow: 0 0 12px rgb(11 11 9 / 0.9);
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@keyframes coverDrift {
+  from {
+    transform: translate3d(-5vw, 0, 0);
+  }
+  to {
+    transform: translate3d(5vw, 0, 0);
+  }
+}
+
+@keyframes foilPass {
+  from {
+    background-position: 0% 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes hqPing {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(4.5);
+  }
+}
+
+@keyframes fogPart {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fogDriftA {
+  from {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(5%, 3%, 0) scale(1.14);
+  }
+}
+
+@keyframes fogDriftB {
+  from {
+    transform: translate3d(3%, 2%, 0) scale(1.1);
+  }
+  to {
+    transform: translate3d(-5%, -3%, 0) scale(1);
+  }
+}
+
+/* Reduced motion: nothing animates in, everything renders in its final state.
+   The GSAP side of this is handled in lib/motion.ts; this covers the CSS side
+   and any element whose reveal class ships before hydration. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
