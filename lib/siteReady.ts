@@ -36,8 +36,9 @@ import { CINEMA_MQ, TEXTURES } from "@/lib/globe.config";
 
 /** One reassurance line appears after this. No spinners. */
 export const PATIENCE_MS = 8000;
-/** Absolute ceiling. Past this the gate opens whatever the network is doing. */
-export const HARD_MS = 20000;
+/** Absolute ceiling. Past this the gate opens whatever the network is doing.
+    No visitor should sit on a frozen page longer than this under any failure. */
+export const HARD_MS = 8000;
 
 /** Weights sum to 1. Textures dominate because they ARE the download. */
 const WEIGHTS = { textures: 0.62, sprites: 0.16, fonts: 0.07, dataMap: 0.05, frame: 0.1 };
@@ -207,8 +208,21 @@ export function startSiteReady(): void {
   // Non-cinema (mobile, coarse pointer, reduced motion) never mounts the
   // globe, so gating on globe assets would lock the page on textures that are
   // never requested. Those visitors wait on fonts alone.
-  const cinema = window.matchMedia(CINEMA_MQ).matches;
+  const mql = window.matchMedia(CINEMA_MQ);
+  const cinema = mql.matches;
   if (!cinema) markGlobeUnavailable();
+
+  // If the cinema query STOPS matching after load — the reader zooms in and
+  // the CSS viewport drops under 900px, turns on reduced motion, or switches
+  // to a coarse pointer — gsap.matchMedia reverts FogHero and the canvas stops
+  // producing frames, so the frame/dataMap slices would never complete and the
+  // gate would hang at ~89% with scroll locked until HARD_MS. Completing the
+  // globe slices on the flip opens the gate immediately. (Permanent listener:
+  // startSiteReady is a one-time init with no teardown, and this must outlive
+  // any single mount.)
+  mql.addEventListener("change", () => {
+    if (!mql.matches) markGlobeUnavailable();
+  });
 
   if (document.fonts) {
     document.fonts.ready.then(() => setSlice("fonts", 1)).catch(() => setSlice("fonts", 1));

@@ -31,14 +31,14 @@ export default function SiteIntro() {
   useEffect(() => {
     const el = root.current;
     if (!el) return;
-    // The cinema CSS hides this on mobile/reduced-motion — skip the work too,
-    // and release the globe immediately since no draw will run.
-    if (!window.matchMedia(CINEMA_MQ).matches) {
-      emitLockupBuilt();
-      return;
-    }
 
-    const ctx = gsap.context(() => {
+    // The build is armed through gsap.matchMedia rather than a one-shot check,
+    // so it also fires if the cinema query starts matching AFTER mount — the
+    // load-narrow-then-widen case, where a plain mount-time check left the
+    // cinema swapping in over a lockup frozen at opacity 0.
+    const mm = gsap.matchMedia();
+
+    mm.add(CINEMA_MQ, () => {
       const sReveal = el.querySelector<SVGPathElement>("[data-s-reveal]")!;
       const letters = el.querySelectorAll<HTMLElement>("[data-letter]");
       const divider = el.querySelector<HTMLElement>("[data-divider]")!;
@@ -68,9 +68,15 @@ export default function SiteIntro() {
       tl.to(divider, { scaleY: 1, duration: 0.55, ease: "power3.inOut" }, 1.75);
       tl.to(letters, { opacity: 1, y: 0, stagger: 0.035, duration: 0.6, ease: "power2.out" }, 1.95);
       tl.to(eyebrow, { opacity: 1, duration: 0.6 }, 2.5);
-    }, el);
+    });
 
-    return () => ctx.revert();
+    // Non-cinema (the CSS hides this): no draw will run, so release the globe
+    // immediately rather than making it wait on the lockup's safety timer.
+    mm.add("(max-width: 899px), (pointer: coarse), (prefers-reduced-motion: reduce)", () => {
+      emitLockupBuilt();
+    });
+
+    return () => mm.revert();
   }, []);
 
   // data-beat="lockup": FogHero's loop owns this wrapper's opacity/blur.

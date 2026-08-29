@@ -85,8 +85,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           hydration and therefore useless here.
 
           The safety timer is the important half — if the bundle never
-          arrives, or ReadyGate throws, the page must not stay locked. It
-          matches HARD_MS in lib/siteReady.ts with headroom.
+          arrives, or ReadyGate throws, the page must not stay locked. This is
+          the catastrophic-failure backstop (JS never ran), independent of and
+          well above ReadyGate's own HARD_MS ceiling in lib/siteReady.ts.
         */}
         <script
           dangerouslySetInnerHTML={{
