@@ -6,7 +6,7 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import { clsx } from "@/lib/clsx";
 import { getLenis } from "@/lib/lenis";
 import { useIsomorphicLayoutEffect } from "@/lib/motion";
-import { archivalSrc, duotoneSrc, fullName, portraitAlt, team } from "@/lib/team";
+import { archivalSrc, duotoneSrc, emailFor, fullName, portraitAlt, team } from "@/lib/team";
 
 /* -------------------------------------------------------------------------- */
 /* Copy                                                                        */
@@ -600,6 +600,17 @@ function PinnedSequence() {
                     </p>
                     <p className="mt-3 text-[1.05rem] font-semibold text-ink">{p.title}</p>
                     <p className="mt-4 max-w-[38ch] text-[0.95rem] leading-[1.55] text-muted">{p.bio}</p>
+                    {/* Delivers on "names you'll actually talk to". The block is
+                        aria-hidden (the sr-only roster carries the accessible
+                        mailto); this is the on-screen affordance for the active
+                        person. */}
+                    <a
+                      href={`mailto:${emailFor(p)}`}
+                      tabIndex={-1}
+                      className="rule-link mt-5 inline-block font-mono text-eyebrow-control uppercase text-stamp"
+                    >
+                      Email {p.first} &rarr;
+                    </a>
                   </div>
                 </div>
               ))}
@@ -619,6 +630,7 @@ function PinnedSequence() {
                   <p>
                     {p.title}. {p.tenureTag}. {p.bio}
                   </p>
+                  <a href={`mailto:${emailFor(p)}`}>Email {p.first}</a>
                 </li>
               ))}
             </ol>
@@ -758,6 +770,12 @@ function StackedSequence() {
             </p>
             <p className="mt-3 font-semibold">{p.title}</p>
             <p className="mt-4 leading-relaxed text-muted">{p.bio}</p>
+            <a
+              href={`mailto:${emailFor(p)}`}
+              className="rule-link -my-2 mt-4 inline-block py-2 font-mono text-eyebrow-control uppercase text-stamp"
+            >
+              Email {p.first} &rarr;
+            </a>
           </li>
         ))}
       </ol>

@@ -97,6 +97,20 @@ export const team: TeamMember[] = [
 
 export const fullName = (p: TeamMember) => `${p.first} ${p.last}`;
 
+/**
+ * Contact address per person. Rob, Tina, Megan and Adan publish direct
+ * addresses on the ARS contact page; everyone else routes to the Client
+ * Solutions team inbox. Do not invent per-person addresses for the rest.
+ */
+const PUBLISHED_EMAILS: Record<string, string> = {
+  "2726": "rob@allegiantreverse.com",
+  "2684": "tina@allegiantreverse.com",
+  "2712": "megan@allegiantreverse.com",
+  "2791": "adan@allegiantreverse.com",
+};
+export const emailFor = (p: TeamMember) =>
+  PUBLISHED_EMAILS[p.id] ?? "solutions@allegiantreverse.com";
+
 /** Portrait alt text. Same string for both layers and both layouts. */
 export const portraitAlt = (p: TeamMember) => `${fullName(p)}, ${p.title}`;
 

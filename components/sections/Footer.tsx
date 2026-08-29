@@ -5,8 +5,20 @@ import Eyebrow from "@/components/ui/Eyebrow";
 
 const CONTACT = [
   { label: "New orders", value: "orders@allegiantreverse.com", href: "mailto:orders@allegiantreverse.com" },
+  { label: "Solutions", value: "solutions@allegiantreverse.com", href: "mailto:solutions@allegiantreverse.com" },
+  { label: "General", value: "info@allegiantreverse.com", href: "mailto:info@allegiantreverse.com" },
   { label: "Toll free", value: "844.808.8299", href: "tel:+18448088299" },
+  { label: "Orders fax", value: "916.545.8173", href: "tel:+19165458173" },
 ];
+
+const SOCIAL = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/7950001" },
+  { label: "Facebook", href: "https://www.facebook.com/AllegiantReverse/" },
+  { label: "Instagram", href: "https://www.instagram.com/allegiantreverse/" },
+];
+
+const PRIVACY_URL =
+  "https://allegiantreverse.com/wp-content/uploads/2024/09/10DLC-Privacy-Policy.pdf";
 
 export default function Footer() {
   return (
@@ -54,6 +66,20 @@ export default function Footer() {
               Member, National Reverse Mortgage Lenders Association (NRMLA).
               <br />A Stewart Title company.
             </p>
+            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-mono text-eyebrow-control uppercase text-paper/60">
+              {SOCIAL.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rule-link -my-2 py-2"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -61,7 +87,17 @@ export default function Footer() {
           <p>&copy; 2026 Allegiant Reverse Services</p>
           {/* Concept build — the label stays on the page rather than in a deck. */}
           <p>Concept redesign — placeholder content</p>
-          <ul className="flex gap-6">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            <li>
+              <a
+                href={PRIVACY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rule-link -my-3 py-3"
+              >
+                Privacy Policy
+              </a>
+            </li>
             <li>
               <a href="#top" className="rule-link -my-3 py-3">
                 Back to top
