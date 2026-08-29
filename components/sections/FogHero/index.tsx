@@ -203,6 +203,8 @@ export default function FogHero() {
       ];
       const cue = q("[data-cue]");
       const skip = q("[data-skip]");
+      const skipDark = q("[data-skip-dark]");
+      const skipLight = q("[data-skip-light]");
       const beatsLayer = q("[data-beats]");
       const tint = q("[data-cover-tint]");
       const fillEl = q("[data-cover-fill]");
@@ -237,6 +239,18 @@ export default function FogHero() {
           )} ${Math.round(INK[2] + (PAPER[2] - INK[2]) * k)})`
         );
         el.style.setProperty("--beat-halo", (0.45 * k).toFixed(3));
+
+        // Skip control rides the swap as an opacity cross-fade of two
+        // solid-colour copies rather than an interpolated colour — so it is
+        // always ink-on-light or paper-on-ink, never a mid-grey fill. Its own
+        // steeper, slightly-later window keeps the 50/50 frame off the exact
+        // scroll position where the ground is mid-grey; the contrasting halos
+        // on each copy carry the brief crossover. (Its ground is the darkening
+        // corner vignette, which passes through a mid value no single colour
+        // can clear at 4.5:1 — the halos are the legibility floor there.)
+        const ks = span(p, 0.15, 0.185);
+        if (skipDark) skipDark.style.opacity = (1 - ks).toFixed(3);
+        if (skipLight) skipLight.style.opacity = ks.toFixed(3);
 
         // Scrub-linked lateral on the DOM fog (time drift lives in CSS).
         if (fog.current) fog.current.style.transform = `translate3d(${(-48 * p).toFixed(1)}px,0,0)`;
@@ -429,15 +443,36 @@ export default function FogHero() {
           </div>
 
           {/* First focusable element in the sequence — keyboard users are two
-              keys from the content. */}
+              keys from the content.
+
+              The control is on screen for the whole sequence, so its ground
+              travels from the light preloader fog to ink space. A single colour
+              (the old var(--beat-ink)) passed through a mid-grey at the swap and
+              measured 1.03:1 mid-scroll. Two stacked copies — ink and paper —
+              cross-fade on the same k that drives the type swap: dark on the
+              light fog, light on the ink. Neither frame is ever mid-grey. */}
           <button
             type="button"
             data-skip
             onClick={skipIntro}
             aria-live="polite"
-            className="absolute bottom-6 right-6 z-10 font-mono text-eyebrow uppercase tracking-[0.14em] text-[color:var(--beat-ink)]"
+            className="absolute bottom-6 right-6 z-10 grid font-mono text-eyebrow uppercase tracking-[0.14em]"
           >
-            {skipPending ? `Loading ${String(skipPct).padStart(2, "0")}%` : "Skip intro ↓"}
+            <span
+              data-skip-dark
+              className="col-start-1 row-start-1 text-ink"
+              style={{ textShadow: "0 0 8px rgb(231 234 236 / 0.9), 0 1px 2px rgb(231 234 236 / 0.75)" }}
+            >
+              {skipPending ? `Loading ${String(skipPct).padStart(2, "0")}%` : "Skip intro ↓"}
+            </span>
+            <span
+              data-skip-light
+              aria-hidden
+              className="col-start-1 row-start-1 text-paper"
+              style={{ opacity: 0, textShadow: "0 0 10px rgb(11 11 9 / 0.9), 0 1px 3px rgb(11 11 9 / 0.75)" }}
+            >
+              {skipPending ? `Loading ${String(skipPct).padStart(2, "0")}%` : "Skip intro ↓"}
+            </span>
           </button>
 
           {/* Text beats — lower-third, left on the content grid, one at a time.
