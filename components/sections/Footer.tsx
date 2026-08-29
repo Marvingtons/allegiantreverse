@@ -31,7 +31,7 @@ export default function Footer() {
                   <span className="w-28 shrink-0 font-mono text-eyebrow uppercase tracking-[0.14em] text-paper/60">
                     {c.label}
                   </span>
-                  <a href={c.href} className="rule-link tabular text-lede">
+                  <a href={c.href} className="rule-link -my-2 py-2 tabular text-lede">
                     {c.value}
                   </a>
                 </li>
@@ -63,12 +63,12 @@ export default function Footer() {
           <p>Concept redesign — placeholder content</p>
           <ul className="flex gap-6">
             <li>
-              <a href="#top" className="rule-link">
+              <a href="#top" className="rule-link -my-3 py-3">
                 Back to top
               </a>
             </li>
             <li>
-              <a href="#calculator" className="rule-link">
+              <a href="#calculator" className="rule-link -my-3 py-3">
                 Fee quote
               </a>
             </li>

@@ -4,11 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { clsx } from "@/lib/clsx";
 
 // No Coverage link any more: the coverage claim is the hero sequence itself,
-// and the Hawaii/Iowa specifics sit under the fee calculator.
+// and the state specifics sit under the fee calculator.
+//
+// `mobile: true` links survive below sm. All four fit at sm+, but four links
+// plus the wordmark overflow a 390px row, so the phone keeps the two that are
+// ACTIONS — price a file, open an order — which is exactly the daily-user
+// workflow. Services and Contact are a scroll away and reappear at sm.
+const ORDERS_EMAIL = "orders@allegiantreverse.com";
 const LINKS = [
-  { href: "#services", label: "Services" },
-  { href: "#calculator", label: "Fee quote" },
-  { href: "#contact", label: "Contact" },
+  { href: "#services", label: "Services", mobile: false },
+  { href: "#calculator", label: "Fee quote", mobile: true },
+  { href: "#contact", label: "Contact", mobile: false },
+  { href: `mailto:${ORDERS_EMAIL}`, label: "Open an order", mobile: true },
 ];
 
 /** Below this, the nav is always shown — no hiding at the top of the page. */
@@ -92,21 +99,23 @@ export default function Nav() {
         <a
           href="#top"
           data-brand
-          className="font-display text-[1.15rem] leading-none tracking-[-0.02em]"
+          className="-my-2 py-2 font-display text-[1.15rem] leading-none tracking-[-0.02em]"
           aria-label="Allegiant Reverse Services — home"
         >
           Allegiant<span className="hidden text-muted sm:inline"> Reverse Services</span>
         </a>
 
-        {/* Four links do not fit beside the wordmark on a phone, and a
+        {/* Four links do not all fit beside the wordmark on a phone, and a
             single-page concept does not earn a hamburger. Below sm the nav
-            collapses to the one link that matters. */}
-        <ul className="flex items-center gap-6 md:gap-9">
+            keeps the two action links; every link carries a py-3 hit area
+            (with matching -my-3 so the bar height is unchanged) so no target
+            is under 24px for the 45-65 audience. */}
+        <ul className="flex items-center gap-5 sm:gap-6 md:gap-9">
           {LINKS.map((l) => (
-            <li key={l.href} className={l.href === "#calculator" ? "" : "hidden sm:block"}>
+            <li key={l.href} className={l.mobile ? "" : "hidden sm:block"}>
               <a
                 href={l.href}
-                className="rule-link font-mono text-eyebrow uppercase tracking-[0.14em] text-ink"
+                className="rule-link -my-3 py-3 font-mono text-eyebrow uppercase tracking-[0.14em] text-ink"
               >
                 {l.label}
               </a>
