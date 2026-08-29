@@ -188,7 +188,7 @@ export default function FeeCalculator() {
                       setQuote(null);
                       setNote(null);
                     }}
-                    className="h-14 w-full appearance-none border border-rule bg-surface px-4 text-base text-ink"
+                    className="state-select h-14 w-full appearance-none border border-rule bg-surface pl-4 pr-12 text-base text-ink"
                   >
                     <option value="">Select a state</option>
                     {SERVED_STATES.map((s) => (
