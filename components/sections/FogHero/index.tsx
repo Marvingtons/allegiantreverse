@@ -456,7 +456,7 @@ export default function FogHero() {
             data-skip
             onClick={skipIntro}
             aria-live="polite"
-            className="absolute bottom-6 right-6 z-10 grid font-mono text-eyebrow uppercase tracking-[0.14em]"
+            className="absolute bottom-6 right-6 z-10 grid font-mono text-eyebrow-control uppercase"
           >
             <span
               data-skip-dark
@@ -516,10 +516,10 @@ export default function FogHero() {
                 <p className="font-mono text-[11px] uppercase tracking-[0.34em] text-[#8fa3b8]">
                   Licensed coast to coast&nbsp;&nbsp;·&nbsp;&nbsp;HQ — California
                 </p>
-                <h1 className="mt-4 font-display text-[clamp(26px,2.6vw,38px)] font-normal leading-snug text-paper">
+                <h1 className="mt-4 font-display text-display-5 font-normal leading-snug text-paper">
                   Every state. <span className="foil-word">One standard.</span>
                 </h1>
-                <p className="cue mt-8 font-mono text-eyebrow uppercase tracking-[0.35em] text-paper/60">
+                <p className="cue mt-8 font-mono text-eyebrow uppercase text-paper/60">
                   Scroll
                 </p>
               </div>
@@ -529,7 +529,7 @@ export default function FogHero() {
           {/* Phase-0 cue, gone by the first flick. */}
           <p
             data-cue
-            className="pointer-events-none absolute bottom-7 left-1/2 -translate-x-1/2 font-mono text-eyebrow uppercase tracking-[0.35em] text-[color:var(--beat-ink)]"
+            className="pointer-events-none absolute bottom-7 left-1/2 -translate-x-1/2 font-mono text-eyebrow uppercase text-[color:var(--beat-ink)]"
             aria-hidden
           >
             Scroll

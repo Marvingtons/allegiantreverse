@@ -36,22 +36,29 @@ const config: Config = {
       },
       fontSize: {
         // Base is 18px, not 16px — the borrower half of this audience is 62+.
-        // Every step below is set against that baseline, not Tailwind's.
         // ONE eyebrow spec site-wide: mono 11px, 0.34em tracking, steel.
-        // (Controls — nav links, buttons — override tracking back to 0.14em;
-        // they are labels on interactive elements, not eyebrows.)
+        // Controls (nav links, buttons) use eyebrow-control; aligned data
+        // (line numbers, roster indices) uses eyebrow-data — same 11px, tighter
+        // tracking, so no interactive/data label drifts to a one-off value.
         eyebrow: ["11px", { lineHeight: "1.2", letterSpacing: "0.34em" }],
+        "eyebrow-control": ["11px", { lineHeight: "1.2", letterSpacing: "0.14em" }],
+        "eyebrow-data": ["11px", { lineHeight: "1.2", letterSpacing: "0.1em" }],
         base: ["1rem", { lineHeight: "1.6" }],
         lede: ["1.22rem", { lineHeight: "1.55" }],
-        display: ["clamp(3.5rem, 9vw, 8.5rem)", { lineHeight: "0.95", letterSpacing: "-0.03em" }],
-        "display-sm": ["clamp(2.5rem, 5.5vw, 4.5rem)", { lineHeight: "1", letterSpacing: "-0.025em" }],
-        numeral: ["clamp(4.5rem, 12vw, 11rem)", { lineHeight: "0.85", letterSpacing: "-0.04em" }],
-        statement: ["clamp(1.5rem, 3vw, 2.25rem)", { lineHeight: "1.35", letterSpacing: "-0.015em" }],
+        // Display scale — a ~1.27 ratio in absolute px, so the crowded 34-38px
+        // band collapses to one step (display-5). Every heading uses one of
+        // these six; bespoke feature type (the desk name, the fog beats, the
+        // brand lockup) keeps its own size by intent.
+        "display-1": ["clamp(56px, 9vw, 130px)", { lineHeight: "0.98", letterSpacing: "-0.02em" }],
+        "display-2": ["clamp(44px, 5.5vw, 79px)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
+        "display-3": ["clamp(36px, 4.4vw, 63px)", { lineHeight: "1.05", letterSpacing: "-0.015em" }],
+        "display-4": ["clamp(30px, 3.5vw, 50px)", { lineHeight: "1.1", letterSpacing: "-0.015em" }],
+        "display-5": ["clamp(26px, 2.8vw, 40px)", { lineHeight: "1.15", letterSpacing: "-0.015em" }],
+        "display-6": ["clamp(22px, 2.2vw, 32px)", { lineHeight: "1.2", letterSpacing: "-0.01em" }],
       },
       maxWidth: {
         shell: "88rem",
         measure: "34ch",
-        statement: "28ch",
       },
       transitionTimingFunction: {
         settle: "var(--ease-settle)", // power3.out; single source is --ease-settle in globals.css

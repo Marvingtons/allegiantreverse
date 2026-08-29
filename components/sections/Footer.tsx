@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="shell">
         <RevealLines
           as="h2"
-          className="font-display text-display"
+          className="font-display text-display-1"
           lines={[
             <>
               Let&apos;s <span className="text-stamp-bright">close</span>.
@@ -28,7 +28,7 @@ export default function Footer() {
             <ul className="mt-6 space-y-3">
               {CONTACT.map((c) => (
                 <li key={c.label} className="flex flex-wrap items-baseline gap-x-4">
-                  <span className="w-28 shrink-0 font-mono text-eyebrow uppercase tracking-[0.14em] text-paper/60">
+                  <span className="w-28 shrink-0 font-mono text-eyebrow-control uppercase text-paper/60">
                     {c.label}
                   </span>
                   <a href={c.href} className="rule-link -my-2 py-2 tabular text-lede">
@@ -57,7 +57,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-paper/15 pt-6 font-mono text-eyebrow uppercase tracking-[0.14em] text-paper/60 md:flex-row md:items-center md:justify-between">
+        <div className="mt-16 flex flex-col gap-4 border-t border-paper/15 pt-6 font-mono text-eyebrow-control uppercase text-paper/60 md:flex-row md:items-center md:justify-between">
           <p>&copy; 2026 Allegiant Reverse Services</p>
           {/* Concept build — the label stays on the page rather than in a deck. */}
           <p>Concept redesign — placeholder content</p>

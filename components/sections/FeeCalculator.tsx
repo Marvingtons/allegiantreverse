@@ -141,7 +141,7 @@ export default function FeeCalculator() {
       <div className="shell grid gap-14 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
           <Eyebrow>Line 1100 — Title charges</Eyebrow>
-          <h2 className="mt-6 max-w-measure font-display text-display-sm">
+          <h2 className="mt-6 max-w-measure font-display text-display-2">
             Price the file in ten seconds.
           </h2>
           <p className="mt-6 max-w-measure text-muted">
@@ -231,7 +231,7 @@ export default function FeeCalculator() {
 
               <button
                 type="submit"
-                className="mt-7 h-14 w-full bg-navy px-8 font-mono text-eyebrow uppercase tracking-[0.14em] text-paper transition-colors duration-300 ease-settle hover:bg-navy-2 sm:w-auto"
+                className="mt-7 h-14 w-full bg-navy px-8 font-mono text-eyebrow-control uppercase text-paper transition-colors duration-300 ease-settle hover:bg-navy-2 sm:w-auto"
               >
                 Get instant quote
               </button>
@@ -260,7 +260,7 @@ export default function FeeCalculator() {
                       data-fee-line
                       className="flex items-baseline gap-4 border-b border-rule py-3.5"
                     >
-                      <span className="w-16 shrink-0 font-mono text-eyebrow tracking-[0.1em] text-muted">
+                      <span className="w-16 shrink-0 font-mono text-eyebrow-data text-muted">
                         {l.line}
                       </span>
                       <span className="flex-1">{l.label}</span>
@@ -275,7 +275,7 @@ export default function FeeCalculator() {
                     data-fee-total
                     className="mt-4 flex items-baseline gap-4 border-y-[3px] border-double border-ink py-4"
                   >
-                    <span className="w-16 shrink-0 font-mono text-eyebrow tracking-[0.1em] text-stamp">
+                    <span className="w-16 shrink-0 font-mono text-eyebrow-data text-stamp">
                       Total
                     </span>
                     <span className="flex-1 font-display text-[1.35rem]">
@@ -293,14 +293,14 @@ export default function FeeCalculator() {
                       href={`mailto:${ORDERS_EMAIL}?subject=${encodeURIComponent(
                         `New order — ${quote.state.name}`
                       )}`}
-                      className="inline-flex h-12 items-center justify-center bg-navy px-6 font-mono text-eyebrow uppercase tracking-[0.14em] text-paper transition-colors duration-300 ease-settle hover:bg-navy-2"
+                      className="inline-flex h-12 items-center justify-center bg-navy px-6 font-mono text-eyebrow-control uppercase text-paper transition-colors duration-300 ease-settle hover:bg-navy-2"
                     >
                       Open an order&nbsp;→
                     </a>
                     <button
                       type="button"
                       onClick={copyQuote}
-                      className="inline-flex h-12 items-center justify-center border border-rule px-6 font-mono text-eyebrow uppercase tracking-[0.14em] text-ink transition-colors duration-300 ease-settle hover:bg-stamp-soft"
+                      className="inline-flex h-12 items-center justify-center border border-rule px-6 font-mono text-eyebrow-control uppercase text-ink transition-colors duration-300 ease-settle hover:bg-stamp-soft"
                     >
                       {copied ? "Copied ✓" : "Copy quote"}
                     </button>

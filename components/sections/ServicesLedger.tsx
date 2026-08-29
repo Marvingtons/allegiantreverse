@@ -75,7 +75,7 @@ export default function ServicesLedger() {
         <div className="md:col-span-4">
           <div className="md:sticky md:top-32">
             <Eyebrow>Services</Eyebrow>
-            <h2 className="mt-6 max-w-measure font-display text-display-sm">
+            <h2 className="mt-6 max-w-measure font-display text-display-2">
               Every line of the title block.
             </h2>
             <p className="mt-6 max-w-measure text-muted">

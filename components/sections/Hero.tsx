@@ -29,7 +29,7 @@ export default function Hero({ as = "h1" }: { as?: "h1" | "p" }) {
           as={as}
           trigger="load"
           delay={0.15}
-          className="font-display text-display font-normal"
+          className="font-display text-display-1 font-normal"
           lines={[
             "Reverse,",
             <>
@@ -42,7 +42,7 @@ export default function Hero({ as = "h1" }: { as?: "h1" | "p" }) {
             "48 states" count are unsourced against allegiantreverse.com, which
             calls its own coverage "Nationwide" — so we say that, and let the
             2003 tenure (the true, stronger claim) carry the count. */}
-        <ul className="mt-12 flex flex-col gap-5 border-t border-rule pt-7 font-mono text-eyebrow uppercase tracking-[0.14em] text-muted sm:flex-row sm:gap-12 md:mt-16 md:gap-16">
+        <ul className="mt-12 flex flex-col gap-5 border-t border-rule pt-7 font-mono text-eyebrow-control uppercase text-muted sm:flex-row sm:gap-12 md:mt-16 md:gap-16">
           <li className="flex items-baseline gap-3">
             <span className="text-[1.05rem] tracking-[0.02em] text-ink">Nationwide</span>
             coverage

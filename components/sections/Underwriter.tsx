@@ -33,13 +33,13 @@ export default function Underwriter() {
   return (
     <section className="border-t border-rule bg-stamp-soft/40 py-20" aria-label="Underwriter">
       <div ref={root} className="shell flex flex-col gap-8 md:flex-row md:items-baseline md:gap-16">
-        <p className="font-display text-[2rem] leading-none tracking-[-0.02em]">
+        <p className="font-display text-display-5 leading-none">
           Backed by Stewart.
         </p>
         {/* Wordmark stands in for the licensed Stewart lockup in a concept build. */}
         <p className="font-mono text-[1.05rem] uppercase tracking-[0.3em] text-ink">
           Stewart
-          <span className="ml-2 align-middle text-eyebrow tracking-[0.14em] text-muted">
+          <span className="ml-2 align-middle text-eyebrow-control text-muted">
             Title
           </span>
         </p>

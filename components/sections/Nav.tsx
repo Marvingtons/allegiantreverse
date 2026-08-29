@@ -114,7 +114,7 @@ export default function Nav() {
             <li key={l.href} className={l.mobile ? "" : "hidden sm:block"}>
               <a
                 href={l.href}
-                className="rule-link -my-3 py-3 font-mono text-eyebrow uppercase tracking-[0.14em] text-ink"
+                className="rule-link -my-3 py-3 font-mono text-eyebrow-control uppercase text-ink"
               >
                 {l.label}
               </a>

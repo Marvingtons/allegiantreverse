@@ -52,7 +52,7 @@ export default function HairlineRow({ line, title, note, href = "#calculator" }:
           >
             &#8594;
           </span>
-          <span className="font-display text-[1.6rem] leading-tight tracking-[-0.015em] md:text-[2.1rem]">
+          <span className="font-display text-display-5 leading-tight">
             {title}
           </span>
         </span>

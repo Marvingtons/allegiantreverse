@@ -457,7 +457,7 @@ function PinnedSequence() {
         {/* ---- Act 1: the timeline ------------------------------------- */}
         <div ref={head} className="shell absolute inset-x-0 top-[18vh] z-10">
           <Eyebrow>In reverse since 2003</Eyebrow>
-          <h2 className="mt-6 max-w-measure font-display text-display-sm">
+          <h2 className="mt-6 max-w-measure font-display text-display-2">
             Twenty-three years on one product.
           </h2>
         </div>
@@ -474,7 +474,7 @@ function PinnedSequence() {
         >
           {STOPS.map((s) => (
             <li key={s.year} className="w-[26rem] shrink-0 pr-16 pt-8 last:w-[22rem] last:pr-0">
-              <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-stamp">
+              <p className="font-mono text-eyebrow-control uppercase text-stamp">
                 {s.year}
               </p>
               <p className="mt-4 max-w-[34ch] text-lede leading-snug">{s.text}</p>
@@ -503,7 +503,7 @@ function PinnedSequence() {
               the matte: the second one is far wider than the image, and by the
               time it appears the track has landed clear of the anchor, so there
               is nothing but paper to its left. */}
-          <span className="absolute right-0 top-full mt-3 block h-[1.2em] whitespace-nowrap text-right font-mono text-eyebrow uppercase tracking-[0.14em] text-muted">
+          <span className="absolute right-0 top-full mt-3 block h-[1.2em] whitespace-nowrap text-right font-mono text-eyebrow-control uppercase text-muted">
             <span ref={capA} className="absolute right-0 top-0">{CAPTION_A}</span>
             <span ref={capB} className="absolute right-0 top-0 opacity-0">{CAPTION_B}</span>
           </span>
@@ -564,7 +564,7 @@ function PinnedSequence() {
           <div className="w-full max-w-[40rem]">
             <div data-compose className="flex items-baseline justify-between border-b border-rule pb-4 opacity-0">
               <Eyebrow as="span">The desk</Eyebrow>
-              <span aria-hidden className="tabular font-mono text-eyebrow tracking-[0.14em] text-muted">
+              <span aria-hidden className="tabular font-mono text-eyebrow-control text-muted">
                 {PAD(activeIndex)} / {COUNT}
               </span>
             </div>
@@ -592,7 +592,7 @@ function PinnedSequence() {
                   <div className="mt-5">
                     <p
                       className={clsx(
-                        "font-mono text-eyebrow uppercase tracking-[0.14em]",
+                        "font-mono text-eyebrow-control uppercase",
                         p.tenureAccent ? "text-stamp" : "text-muted"
                       )}
                     >
@@ -657,7 +657,7 @@ function PinnedSequence() {
                       <span
                         aria-hidden
                         className={clsx(
-                          "tabular w-6 shrink-0 font-mono text-eyebrow tracking-[0.1em] transition-colors duration-300 ease-settle",
+                          "tabular w-6 shrink-0 font-mono text-eyebrow-data transition-colors duration-300 ease-settle",
                           on ? "text-stamp" : "text-muted"
                         )}
                       >
@@ -677,7 +677,7 @@ function PinnedSequence() {
               })}
             </ol>
 
-            <p data-compose className="mt-4 border-t border-rule pt-4 font-mono text-eyebrow uppercase leading-relaxed tracking-[0.14em] text-muted opacity-0">
+            <p data-compose className="mt-4 border-t border-rule pt-4 font-mono text-eyebrow-control uppercase leading-relaxed text-muted opacity-0">
               In reverse <span className="text-ink">since 2003</span> — same team, same product.
             </p>
           </div>
@@ -700,14 +700,14 @@ function StackedSequence() {
   return (
     <div className="desk-stack shell py-24">
       <Eyebrow>In reverse since 2003</Eyebrow>
-      <h2 className="mt-6 max-w-measure font-display text-display-sm">
+      <h2 className="mt-6 max-w-measure font-display text-display-2">
         Twenty-three years on one product.
       </h2>
 
       <ol className="mt-12 space-y-10">
         {STOPS.map((s) => (
           <li key={s.year} className="border-l border-rule pl-6">
-            <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-stamp">{s.year}</p>
+            <p className="font-mono text-eyebrow-control uppercase text-stamp">{s.year}</p>
             <p className="mt-3 max-w-[34ch] text-lede leading-snug">{s.text}</p>
           </li>
         ))}
@@ -723,7 +723,7 @@ function StackedSequence() {
           decoding="async"
           className="block aspect-[4/5] w-full border border-rule object-cover"
         />
-        <figcaption className="mt-3 font-mono text-eyebrow uppercase leading-relaxed tracking-[0.14em] text-muted">
+        <figcaption className="mt-3 font-mono text-eyebrow-control uppercase leading-relaxed text-muted">
           {CAPTION_A}
           <br />
           {CAPTION_B}
@@ -743,14 +743,14 @@ function StackedSequence() {
                 className="h-full w-full object-cover"
               />
             </div>
-            <h3 className="mt-6 font-display text-[clamp(2.25rem,9vw,3.25rem)] leading-[0.95] tracking-[-0.025em] [overflow-wrap:anywhere]">
+            <h3 className="mt-6 font-display text-display-3 leading-[0.95] [overflow-wrap:anywhere]">
               {p.first}
               <br />
               {p.last}
             </h3>
             <p
               className={clsx(
-                "mt-4 font-mono text-eyebrow uppercase tracking-[0.14em]",
+                "mt-4 font-mono text-eyebrow-control uppercase",
                 p.tenureAccent ? "text-stamp" : "text-muted"
               )}
             >
@@ -762,7 +762,7 @@ function StackedSequence() {
         ))}
       </ol>
 
-      <p className="mt-16 border-t border-rule pt-5 font-mono text-eyebrow uppercase leading-relaxed tracking-[0.14em] text-muted">
+      <p className="mt-16 border-t border-rule pt-5 font-mono text-eyebrow-control uppercase leading-relaxed text-muted">
         In reverse <span className="text-ink">since 2003</span> — same team, same product.
       </p>
     </div>
