@@ -54,7 +54,7 @@ const config: Config = {
         statement: "28ch",
       },
       transitionTimingFunction: {
-        settle: "cubic-bezier(0.22, 1, 0.36, 1)", // power3.out, matched to lib/motion.ts
+        settle: "var(--ease-settle)", // power3.out; single source is --ease-settle in globals.css
       },
     },
   },

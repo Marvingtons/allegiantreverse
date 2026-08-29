@@ -87,8 +87,7 @@ export default function Nav() {
     <header
       onFocus={() => setHidden(false)}
       className={clsx(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter,transform] duration-500 ease-settle",
-        "motion-safe:duration-[350ms]",
+        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter,transform] duration-[350ms] ease-settle",
         hidden ? "-translate-y-full" : "translate-y-0",
         scrolled
           ? "border-b border-rule bg-paper/80 backdrop-blur-md"

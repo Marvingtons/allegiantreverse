@@ -347,7 +347,7 @@ export default function FogHero() {
       f.style.display = "none";
     } else {
       // Both layers are soft fog-white — the 0.8s swap is invisible.
-      f.style.transition = "opacity 0.8s ease";
+      f.style.transition = "opacity 0.8s var(--ease-settle)";
       f.style.opacity = "0";
       window.setTimeout(() => {
         f.style.display = "none";
