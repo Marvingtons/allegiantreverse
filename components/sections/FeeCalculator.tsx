@@ -87,7 +87,7 @@ export default function FeeCalculator() {
 
   const [copied, setCopied] = useState(false);
 
-  /** Copy the quote as a plain itemised block — the shape a closer pastes into
+  /** Copy the quote as a plain itemized block — the shape a closer pastes into
       an email or an order. */
   function copyQuote() {
     if (!quote) return;
@@ -146,7 +146,7 @@ export default function FeeCalculator() {
           </h2>
           <p className="mt-6 max-w-measure text-muted">
             Two fields, no login, no callback. The same numbers your closer would read
-            back to you on the phone, itemised the way they appear on the settlement
+            back to you on the phone, itemized the way they appear on the settlement
             statement.
           </p>
           <p className="mt-8 font-mono text-eyebrow uppercase text-steel">

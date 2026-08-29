@@ -20,7 +20,7 @@ const SERVICES = [
   {
     line: "1102",
     title: "Property Reports & Demographics",
-    note: "Ownership, encumbrance, and neighbourhood reports sized for reverse underwriting, not retail refi.",
+    note: "Ownership, encumbrance, and neighborhood reports sized for reverse underwriting, not retail refi.",
   },
   {
     line: "1103",

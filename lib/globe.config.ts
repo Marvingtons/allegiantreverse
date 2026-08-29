@@ -328,8 +328,10 @@ export const TEXTURES = {
   // So the resolution stays and the bytes come out of the encoder instead:
   // 1.98MB -> 1.44MB at q0.72, with the whole texture set at 2.07MB.
   //
-  // earth_clouds_8k.jpg and the 4k JPEG are retained in public/textures if a
-  // future full-res pass ever puts the camera back inside clear cloud.
+  // If a future full-res pass ever puts the camera back inside clear cloud,
+  // re-fetch the source 8K cloud map from the three.js examples set
+  // (examples/textures/planets/earth_clouds_*.jpg) and re-encode; the heavy
+  // JPEG originals are no longer carried in the repo.
   clouds: "/textures/earth_clouds_4k.webp",
 } as const;
 
