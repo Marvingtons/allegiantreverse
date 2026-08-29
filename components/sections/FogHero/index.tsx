@@ -444,20 +444,25 @@ export default function FogHero() {
             <div className="fog-blob fog-blob-3" />
           </div>
 
-          {/* First focusable element in the sequence — keyboard users are two
-              keys from the content.
+          {/* Skip-INTRO control: jumps past the cinema to the paper site. (The
+              two-keys-to-content path is the skip-to-content link in the layout,
+              not this button.) It is the first focusable element inside the
+              stage, so keyboard users reach it early.
 
               The control is on screen for the whole sequence, so its ground
               travels from the light preloader fog to ink space. A single colour
               (the old var(--beat-ink)) passed through a mid-grey at the swap and
               measured 1.03:1 mid-scroll. Two stacked copies — ink and paper —
               cross-fade on the same k that drives the type swap: dark on the
-              light fog, light on the ink. Neither frame is ever mid-grey. */}
+              light fog, light on the ink. Neither frame is ever mid-grey.
+
+              No aria-live here: it re-announced the whole control label on every
+              percent tick. The loading status lives in one static sr-only
+              region below, announced once. */}
           <button
             type="button"
             data-skip
             onClick={skipIntro}
-            aria-live="polite"
             className="absolute bottom-6 right-6 z-10 grid font-mono text-eyebrow-control uppercase"
           >
             <span
@@ -476,6 +481,11 @@ export default function FogHero() {
               {skipPending ? `Loading ${String(skipPct).padStart(2, "0")}%` : "Skip intro ↓"}
             </span>
           </button>
+          {/* One static announcement when a skip is queued — not the per-tick
+              percentage — so a screen-reader user hears the wait once. */}
+          <span className="sr-only" role="status" aria-live="polite">
+            {skipPending ? "Preparing the experience, the intro will be skipped when ready." : ""}
+          </span>
 
           {/* Text beats — lower-third, left on the content grid, one at a time.
               Everything is pointer-events-none: the sequence never intercepts

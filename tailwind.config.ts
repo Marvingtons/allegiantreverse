@@ -57,6 +57,13 @@ const config: Config = {
         shell: "88rem",
         measure: "34ch",
       },
+      spacing: {
+        // The deliberately-compressed section rhythm (the Underwriter band),
+        // named so it reads as a decision rather than a stray py-20. Note the
+        // 112.5% root: every Tailwind step is 1.125x its nominal px, so this
+        // 5rem band is 90px, and the standard py-32 sections are 144px.
+        band: "5rem",
+      },
       transitionTimingFunction: {
         settle: "var(--ease-settle)", // power3.out; single source is --ease-settle in globals.css
       },

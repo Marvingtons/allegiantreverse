@@ -31,7 +31,7 @@ export default function Underwriter() {
   }, [reduced]);
 
   return (
-    <section className="border-t border-rule bg-stamp-soft/40 py-20" aria-label="Underwriter">
+    <section className="border-t border-rule bg-stamp-soft/40 py-band" aria-label="Underwriter">
       <div ref={root} className="shell flex flex-col gap-8 md:flex-row md:items-baseline md:gap-16">
         <p className="font-display text-display-5 leading-none">
           Backed by Stewart.

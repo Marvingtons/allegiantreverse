@@ -34,6 +34,10 @@ const STOPS = [
 const CAPTION_A = "Rob Awalt · Founder";
 const CAPTION_B = "Seven names you'll actually talk to ↓";
 
+/** Years in reverse, derived from 2003 so the headline never goes stale. A
+    module constant (not per-render) keeps server and client in agreement. */
+const YEARS_IN_REVERSE = new Date().getFullYear() - 2003;
+
 const N = team.length;
 const PAD = (n: number) => String(n + 1).padStart(2, "0");
 const COUNT = String(N).padStart(2, "0");
@@ -458,7 +462,7 @@ function PinnedSequence() {
         <div ref={head} className="shell absolute inset-x-0 top-[18vh] z-10">
           <Eyebrow>In reverse since 2003</Eyebrow>
           <h2 className="mt-6 max-w-measure font-display text-display-2">
-            Twenty-three years on one product.
+            {YEARS_IN_REVERSE} years on one product.
           </h2>
         </div>
 
@@ -712,7 +716,7 @@ function StackedSequence() {
     <div className="desk-stack shell py-24">
       <Eyebrow>In reverse since 2003</Eyebrow>
       <h2 className="mt-6 max-w-measure font-display text-display-2">
-        Twenty-three years on one product.
+        {YEARS_IN_REVERSE} years on one product.
       </h2>
 
       <ol className="mt-12 space-y-10">

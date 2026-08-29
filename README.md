@@ -157,6 +157,10 @@ the title-charge block). A broker recognises their own paperwork.
   that stops still brings the nav back.
 - **Fee figures are invented**, tiered by region. `lib/states.ts` is where a real
   rate engine would go.
+- **The root is 112.5%, so every Tailwind spacing/size step is 1.125x its
+  nominal px.** `py-24` is 108px, not 96px; `py-32` is 144px. The deliberately
+  compressed Underwriter band is the `band` spacing token (`py-band` = 90px),
+  named so it reads as a decision rather than a stray `py-20`.
 
 ## Two dates, and why the copy is fussy about them
 

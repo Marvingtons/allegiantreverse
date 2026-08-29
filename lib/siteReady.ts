@@ -19,10 +19,13 @@ import { CINEMA_MQ, TEXTURES } from "@/lib/globe.config";
  * Gated:
  *   - the four globe textures, through ONE THREE.LoadingManager so the
  *     counter reads real bytes rather than a guess
- *   - the two baked fog sprites the into-the-fog transition rides on
  *   - document.fonts.ready
  *   - the states data-map bake (CPU, ~250ms, and it blocks the first draw)
  *   - one rendered frame of the globe scene
+ *
+ * NOT gated any more: the two baked cover fog sprites. They belong to the end
+ * of the sequence, the CSS loads them when the cover paints, and holding the
+ * opening gate on 394KB the reader will not see until the flyover was waste.
  *
  * NOT gated, because they do not exist: there is no hero video. The opening
  * fog is three CSS gradient plates (.fog-blob), which are painted by the same
@@ -40,10 +43,11 @@ export const PATIENCE_MS = 8000;
     No visitor should sit on a frozen page longer than this under any failure. */
 export const HARD_MS = 8000;
 
-/** Weights sum to 1. Textures dominate because they ARE the download. */
-const WEIGHTS = { textures: 0.62, sprites: 0.16, fonts: 0.07, dataMap: 0.05, frame: 0.1 };
-
-export const FOG_SPRITES = ["/textures/fog-front.webp", "/textures/fog-back.webp"] as const;
+/** Weights sum to 1. Textures dominate because they ARE the download. The two
+    cover fog sprites used to gate here (0.16), but they belong to the END of
+    the 380vh sequence and the CSS loads them when the cover paints — so they
+    no longer hold the opening gate; their weight went to textures and frame. */
+const WEIGHTS = { textures: 0.72, fonts: 0.07, dataMap: 0.05, frame: 0.16 };
 
 type Slice = keyof typeof WEIGHTS;
 
@@ -56,7 +60,6 @@ const progressListeners = new Set<(p: number) => void>();
 /** Per-slice completion, 0..1. `progress()` is their weighted sum. */
 const slices: Record<Slice, number> = {
   textures: 0,
-  sprites: 0,
   fonts: 0,
   dataMap: 0,
   frame: 0,
@@ -138,7 +141,7 @@ export function markDataMap(): void {
     nobody is going to use — without this, a WebGL-less desktop sat locked
     for the full HARD_MS. */
 export function markGlobeUnavailable(): void {
-  for (const k of ["textures", "sprites", "dataMap", "frame"] as Slice[]) setSlice(k, 1);
+  for (const k of ["textures", "dataMap", "frame"] as Slice[]) setSlice(k, 1);
 }
 
 let started = false;
@@ -161,18 +164,10 @@ let started = false;
  * would have paid for its own progress bar with a slower first load.
  */
 async function preloadGlobeAssets(): Promise<void> {
-  let sprites = 0;
-  for (const src of FOG_SPRITES) {
-    const img = new Image();
-    const done = () => setSlice("sprites", ++sprites / FOG_SPRITES.length);
-    img.onload = done;
-    img.onerror = () => {
-      console.warn(`[siteReady] fog sprite failed, continuing without it: ${src}`);
-      done();
-    };
-    img.src = src;
-  }
-
+  // The two cover fog sprites are not preloaded here any more: they belong to
+  // the end of the sequence, and the CSS loads them when the cover decks paint.
+  // Keeping them out of this path is what lets the opening gate ignore 394KB
+  // that the reader will not see until the flyover.
   try {
     const [THREE, { useLoader }] = await Promise.all([
       import("three"),
@@ -230,7 +225,16 @@ export function startSiteReady(): void {
     setSlice("fonts", 1);
   }
 
-  if (cinema) void preloadGlobeAssets();
+  if (cinema) {
+    void preloadGlobeAssets();
+    // Warm the R3F/drei dynamic chunk NOW, in parallel with the intro, rather
+    // than letting FogHero's next/dynamic first request it when it mounts the
+    // canvas after the lockup draw (~3.2s). Only the shader compile and GPU
+    // upload need to wait for the draw; the ~275KB download does not. The mount
+    // stays gated on whenLockupBuilt — this just moves the bytes off the
+    // critical path. Import for effect only; the module cache holds it.
+    void import("@/components/sections/FogHero/GlobeCanvas");
+  }
 
   window.setTimeout(() => {
     if (ready) return;

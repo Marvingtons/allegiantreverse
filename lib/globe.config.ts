@@ -299,6 +299,9 @@ export const TYPE_SWAP = { from: 0.12, to: 0.16 } as const;
 
 export const TEXTURES = {
   map: "/textures/earth_atmos_2048.webp",
+  // normal + specular are halved to 1024x512 (invisible at this camera
+  // distance) — ~295KB off the gated texture set. Filenames keep the "2048"
+  // suffix so this config and any bookmarks stay stable.
   normalMap: "/textures/earth_normal_2048.webp",
   specularMap: "/textures/earth_specular_2048.webp",
   // Clouds at 4K WebP, not 8K and not 4K JPEG. Two rounds of measurement:
