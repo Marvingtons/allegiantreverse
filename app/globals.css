@@ -20,28 +20,28 @@
      the paper any more; its warm end simply IS the paper). */
   --paper-rgb: 231 234 236; /* fog white (#E7EAEC) */
   --ink-rgb: 31 33 36; /* near-black — editorial headlines & body (#1F2124) */
-  --navy-rgb: 5 49 96; /* brand primary — statements on fog, CTAs, links */
-  --navy2-rgb: 4 38 75; /* hover / pressed navy */
-  /* Steel is 3 points darker than the spec's #5B6F87. On cream that value
-     cleared AA at 4.55:1; against fog-white and the fog ramp it falls to
-     4.2–4.3:1, and every eyebrow on the site is 11px normal text. This
-     passes on the darkest ground steel sits on (--fog-2, 4.6:1). */
-  --steel-rgb: 78 97 122; /* #4E617A — secondary labels, eyebrows, both worlds */
+  /* The accent is ONE colour with ONE name: `stamp` (= the brand navy #053160).
+     The old `navy`/`navy-2` aliases are gone — having two names for one hue is
+     exactly the drift this pass removes. Pressed/hover navy is --stamp-dark. */
+  /* Steel re-pinned three points darker to #475970: at the old #4E617A it was
+     one gradient stop from failing on the fog ramp (3.79:1 on --fog-0). This
+     value clears 4.5:1 on every ground an eyebrow actually sits on. */
+  --steel-rgb: 71 89 112; /* #475970 — secondary labels, eyebrows, both worlds */
   --gold-rgb: 216 192 135; /* logo gold — logo + one highlight word max */
-  --gold2-rgb: 138 116 63; /* gold on light backgrounds at text size */
 
   /* Cards and inputs sat on cream as "paper on paper", separated by their
      border alone. On fog-white that reads as flat, so surfaces get a lift
      off the ground rather than matching it. */
   --surface-rgb: 241 244 245;
 
-  --stamp-rgb: 5 49 96; /* = navy: the accent role (legacy name) */
-  --stamp-soft-rgb: 214 221 228; /* navy tint — hover fills, section tints */
+  --stamp-rgb: 5 49 96; /* the accent — brand navy #053160 */
+  --stamp-dark-rgb: 4 38 75; /* pressed / hover accent (#04264B) */
+  --stamp-soft-rgb: 214 221 228; /* accent tint — hover fills, section tints */
   --rule-rgb: 203 208 212; /* hairlines = ink at 12% over fog-white */
+  --rule-fog: #9aa2aa; /* the one hairline that sits on fog, not paper (lockup divider) */
   --muted-rgb: 74 76 79; /* body-secondary = ink at ~80% over paper */
 
-  /* Accent on the ink-ground sections, where full navy has no contrast. */
-  --stamp-lift-rgb: 74 107 148;
+  /* Accent lifted for the ink-ground footer, where full stamp has no contrast. */
   --stamp-bright-rgb: 143 169 199;
 
   /* The fog ramp — every fog gradient builds from these, so a section
@@ -62,16 +62,13 @@
 
   --paper: rgb(var(--paper-rgb));
   --ink: rgb(var(--ink-rgb));
-  --navy: rgb(var(--navy-rgb));
-  --navy-2: rgb(var(--navy2-rgb));
   --steel: rgb(var(--steel-rgb));
   --gold: rgb(var(--gold-rgb));
-  --gold-2: rgb(var(--gold2-rgb));
   --stamp: rgb(var(--stamp-rgb));
+  --stamp-dark: rgb(var(--stamp-dark-rgb));
   --stamp-soft: rgb(var(--stamp-soft-rgb));
   --rule: rgb(var(--rule-rgb));
   --muted: rgb(var(--muted-rgb));
-  --stamp-lift: rgb(var(--stamp-lift-rgb));
   --stamp-bright: rgb(var(--stamp-bright-rgb));
 
   /* The one motion curve: power3.out. Every entrance and hover on the site
@@ -249,7 +246,7 @@
      stroke, matched to the field labels; padding is on the element (Tailwind
      pr-12) so utility order can't drop it. */
   .state-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%234E617A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23475970' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1rem center;
   }
@@ -378,7 +375,7 @@
     top: -15%;
     width: 70%;
     height: 70%;
-    background: radial-gradient(closest-side, rgb(247 245 240 / 0.95), transparent);
+    background: radial-gradient(closest-side, rgb(231 234 236 / 0.95), transparent);
     animation: fogDriftA 47s ease-in-out infinite alternate;
   }
 
@@ -421,7 +418,7 @@
   .intro-divider {
     width: 1px;
     height: 74px;
-    background: #9aa2aa;
+    background: var(--rule-fog);
     transform-origin: top;
   }
 
@@ -430,7 +427,7 @@
     font-family: theme("fontFamily.display");
     font-size: 1.9rem;
     letter-spacing: 0.3em;
-    color: var(--navy);
+    color: var(--stamp);
   }
 
   .intro-name [data-letter] {
@@ -446,7 +443,7 @@
     /* Navy, not steel: measured against the fog actually painted behind the
        lockup (rgb(202,206,205) — darker than page paper), steel lands at
        3.99:1. This reads at 4.97:1 and ties the sub-line to the wordmark. */
-    color: rgb(var(--navy-rgb) / 0.78);
+    color: rgb(var(--stamp-rgb) / 0.78);
   }
 
   /* ---- Into-the-fog cover (final phase of the hero stage) --------------- */
@@ -620,7 +617,7 @@
     font-size: clamp(32px, 3.6vw, 58px);
     line-height: 1.3;
     letter-spacing: 0.045em;
-    color: var(--navy);
+    color: var(--stamp);
   }
 
   .wwa-line-mask {
@@ -663,7 +660,7 @@
     font-weight: 300;
     font-size: clamp(16px, 1.25vw, 19px);
     line-height: 1.75;
-    color: #3a4149;
+    color: var(--muted);
     max-width: 34ch;
   }
 

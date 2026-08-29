@@ -48,9 +48,11 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 /** Local progress inside [a,b], clamped. */
 const span = (p: number, a: number, b: number) => clamp01((p - a) / Math.max(b - a, 1e-6));
 
-// --ink and --paper, as channels, for the scrub-linked type swap.
+// --ink and --paper, as channels, for the scrub-linked type swap. PAPER is the
+// current fog-white paper (#E7EAEC); the old [247 245 240] cream was a straggler
+// from before the cohesion pass and made the beat type resolve to the wrong tone.
 const INK = [26, 26, 23];
-const PAPER = [247, 245, 240];
+const PAPER = [231, 234, 236];
 
 export default function FogHero() {
   const stage = useRef<HTMLDivElement>(null);
@@ -513,7 +515,7 @@ export default function FogHero() {
                   .show/.foil; the foil pass on "One standard." is the one
                   place gold touches type. */}
               <div id="hero-landing" className="col-start-1 row-start-1">
-                <p className="font-mono text-[11px] uppercase tracking-[0.34em] text-[#8fa3b8]">
+                <p className="font-mono text-[11px] uppercase tracking-[0.34em] text-stamp-bright">
                   Licensed coast to coast&nbsp;&nbsp;·&nbsp;&nbsp;HQ — California
                 </p>
                 <h1 className="mt-4 font-display text-display-5 font-normal leading-snug text-paper">

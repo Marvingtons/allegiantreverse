@@ -31,7 +31,7 @@ const groupDigits = (s: string) => {
  * - Labels are always visible. No placeholder-as-label — it disappears exactly
  *   when a 70-year-old borrower needs it most.
  * - Controls are 56px tall, well past the 44px target minimum.
- * - Focus rings are the brand navy from globals.css, never removed.
+ * - Focus rings are the brand accent (stamp) from globals.css, never removed.
  * - The result region is aria-live="polite", so a screen-reader user hears the
  *   quote land instead of discovering it by chance.
  */
@@ -231,7 +231,7 @@ export default function FeeCalculator() {
 
               <button
                 type="submit"
-                className="mt-7 h-14 w-full bg-navy px-8 font-mono text-eyebrow-control uppercase text-paper transition-colors duration-300 ease-settle hover:bg-navy-2 sm:w-auto"
+                className="mt-7 h-14 w-full bg-stamp px-8 font-mono text-eyebrow-control uppercase text-paper transition-colors duration-300 ease-settle hover:bg-stamp-dark sm:w-auto"
               >
                 Get instant quote
               </button>
@@ -293,7 +293,7 @@ export default function FeeCalculator() {
                       href={`mailto:${ORDERS_EMAIL}?subject=${encodeURIComponent(
                         `New order — ${quote.state.name}`
                       )}`}
-                      className="inline-flex h-12 items-center justify-center bg-navy px-6 font-mono text-eyebrow-control uppercase text-paper transition-colors duration-300 ease-settle hover:bg-navy-2"
+                      className="inline-flex h-12 items-center justify-center bg-stamp px-6 font-mono text-eyebrow-control uppercase text-paper transition-colors duration-300 ease-settle hover:bg-stamp-dark"
                     >
                       Open an order&nbsp;→
                     </a>
