@@ -45,8 +45,6 @@ export default function Footer() {
               905 Highland Pointe Dr., Suite 150
               <br />
               Roseville, CA 95678
-              <br />
-              Mon–Fri, 6:00a–5:00p PT
             </address>
           </div>
 

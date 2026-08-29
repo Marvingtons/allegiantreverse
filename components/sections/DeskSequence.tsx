@@ -659,8 +659,7 @@ function PinnedSequence() {
             </ol>
 
             <p data-compose className="mt-4 border-t border-rule pt-4 font-mono text-eyebrow uppercase leading-relaxed tracking-[0.14em] text-muted opacity-0">
-              <span className="text-ink">90+</span> on the team ·{" "}
-              <span className="text-ink">25</span> of the founding team still at their desks.
+              In reverse <span className="text-ink">since 2003</span> — same team, same product.
             </p>
           </div>
         </div>
@@ -745,8 +744,7 @@ function StackedSequence() {
       </ol>
 
       <p className="mt-16 border-t border-rule pt-5 font-mono text-eyebrow uppercase leading-relaxed tracking-[0.14em] text-muted">
-        <span className="text-ink">90+</span> on the team ·{" "}
-        <span className="text-ink">25</span> of the founding team still at their desks.
+        In reverse <span className="text-ink">since 2003</span> — same team, same product.
       </p>
     </div>
   );

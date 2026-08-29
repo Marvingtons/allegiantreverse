@@ -22,8 +22,39 @@ export type StateShape = {
   d: string;
 };
 
-/** The honest detail: ARS closes in 48 states. These two are not among them. */
-export const UNSERVED = new Set(["HI", "IA"]);
+/**
+ * Coverage is transcribed from allegiantreverse.com/coverage-areas, which
+ * discloses three tiers, NOT a flat "48 states". Read the page before editing.
+ *
+ *   - PRICED: ARS is directly licensed to conduct title insurance, OR does
+ *     business as a titled agency (DBA). These are the only states we control a
+ *     fee schedule for, so these are the only states the calculator prices.
+ *     (NY is licensed but published on a SEPARATE schedule — see coverageStatus.)
+ *   - PARTNER_STATES: ARS fulfils through licensed partners "for states where
+ *     ARS is not authorized or licensed" — real coverage, but no standard
+ *     quote, so the calculator routes these to a contact path.
+ *   - UNSERVED: listed in none of ARS's three tiers. Not offered at all.
+ *
+ * JUDGMENT CALL flagged for the client: the priced-vs-partner split below is
+ * the defensible reading of the disclosure, but ARS should confirm which
+ * partner states it is comfortable quoting before this ships beyond concept.
+ */
+export const UNSERVED = new Set(["MA", "PA", "RI"]);
+
+/** Served through licensed partners — covered, but not on a standard schedule. */
+export const PARTNER_STATES = new Set([
+  "AK", "AR", "CT", "HI", "IA", "NM", "ND", "SD", "WY",
+]);
+
+export type Coverage = "priced" | "ny" | "partner" | "unserved";
+
+/** Which calculator path a state takes. NY is licensed but priced separately. */
+export function coverageStatus(abbr: string): Coverage {
+  if (UNSERVED.has(abbr)) return "unserved";
+  if (abbr === "NY") return "ny";
+  if (PARTNER_STATES.has(abbr)) return "partner";
+  return "priced";
+}
 
 export const MAP_VIEWBOX = "0 0 975 610";
 
@@ -144,8 +175,11 @@ export type Quote = {
 const round5 = (n: number) => Math.round(n / 5) * 5;
 
 export function quoteFor(abbr: string, homeValue: number): Quote | null {
+  // Only states ARS itself is licensed/DBA-registered for get a priced quote.
+  // Partner, NY and unserved states are handled by the calculator's copy paths.
+  if (coverageStatus(abbr) !== "priced") return null;
   const state = US_STATES.find((s) => s.abbr === abbr);
-  if (!state || UNSERVED.has(abbr)) return null;
+  if (!state) return null;
 
   const p = FEE_TIERS[TIER_BY_STATE[abbr] ?? "central"];
   const premium = round5(

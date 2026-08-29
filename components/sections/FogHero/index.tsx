@@ -381,7 +381,7 @@ export default function FogHero() {
   return (
     <div id="top">
       {/* ---- Cinema (desktop, fine pointer, motion allowed) ---------------- */}
-      <section className="fog-cinema relative" aria-label="Allegiant Reverse Services — 48 states, in reverse since 2003">
+      <section className="fog-cinema relative" aria-label="Allegiant Reverse Services — nationwide title and settlement, in reverse since 2003">
         <div ref={stage} className="fog-stage grain sticky top-0 h-screen w-full overflow-hidden">
           {/* Wrapper so the cover phase can dim the whole globe (the HQ
               marker portal rides it too). */}
@@ -456,8 +456,10 @@ export default function FogHero() {
               </p>
               <p data-beat="closings" className="beat col-start-1 row-start-1" style={{ opacity: 0 }}>
                 <span className="beat-mask">
-                  {/* Set type, not a count-up — cinematic, not dashboard. */}
-                  <span className="beat-line">130,000+ closings.</span>
+                  {/* Was "130,000+ closings." — unsourced against ARS, so cut.
+                      This beat keeps its timing slot with a verified line that
+                      does not repeat the "Since 2003." beat above. */}
+                  <span className="beat-line">Nothing but reverse.</span>
                 </span>
               </p>
               <p data-beat="product" className="beat col-start-1 row-start-1" style={{ opacity: 0 }}>
@@ -467,7 +469,7 @@ export default function FogHero() {
               </p>
               <p data-beat="states" className="beat col-start-1 row-start-1 text-paper" style={{ opacity: 0 }}>
                 <span className="beat-mask">
-                  <span className="beat-line">48 states.</span>
+                  <span className="beat-line">Nationwide.</span>
                 </span>
               </p>
 

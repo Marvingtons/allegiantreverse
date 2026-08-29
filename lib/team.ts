@@ -22,7 +22,7 @@ export type TeamMember = {
   /**
    * Renders the tag in --stamp. Stored rather than derived: it marks entry into
    * the industry before 2003, which no single numeric field on this type
-   * expresses (one member's tag is "30+ YEARS", not a year at all).
+   * expresses (one member's tag is "MORE THAN 30 YEARS", not a year at all).
    */
   tenureAccent: boolean;
   /** one sentence, spoken register */
@@ -37,7 +37,7 @@ export const team: TeamMember[] = [
     title: "Founder & President",
     tenureTag: "IN REVERSE SINCE 2003",
     tenureAccent: true,
-    bio: "Founded ARS in 2016 after two decades in title — and an NFL career before that. NRMLA board member since 2020.",
+    bio: "Founded ARS in 2016 after fifteen years in title — and an NFL career before that. NRMLA board member since 2020.",
   },
   {
     id: "2684",
@@ -89,9 +89,9 @@ export const team: TeamMember[] = [
     first: "Nicole",
     last: "Sheldon",
     title: "Support Services Group Manager",
-    tenureTag: "30+ YEARS IN TITLE",
+    tenureTag: "MORE THAN 30 YEARS IN TITLE",
     tenureAccent: true,
-    bio: "Thirty years across title and escrow, bridging IT systems and financial operations for the whole desk.",
+    bio: "More than thirty years across title and escrow, bridging IT systems and financial operations for the whole desk.",
   },
 ];
 

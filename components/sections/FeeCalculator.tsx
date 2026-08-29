@@ -4,7 +4,16 @@ import { useId, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import Eyebrow from "@/components/ui/Eyebrow";
 import { DUR, EASE, useIsomorphicLayoutEffect, useReducedMotion } from "@/lib/motion";
-import { HOME_VALUE_BOUNDS, SERVED_STATES, quoteFor, usd, type Quote } from "@/lib/states";
+import {
+  HOME_VALUE_BOUNDS,
+  SERVED_STATES,
+  coverageStatus,
+  quoteFor,
+  usd,
+  type Quote,
+} from "@/lib/states";
+
+const ORDERS_EMAIL = "orders@allegiantreverse.com";
 
 const parseValue = (s: string) => Number(s.replace(/[^\d]/g, ""));
 
@@ -33,6 +42,9 @@ export default function FeeCalculator() {
   const [display, setDisplay] = useState("");
   const [quote, setQuote] = useState<Quote | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /** Non-priced states (NY separate schedule, partner states) show a routing
+      note instead of a quote — coverage is honest, pricing is not guessed. */
+  const [note, setNote] = useState<"ny" | "partner" | "unserved" | null>(null);
 
   const resultRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -64,9 +76,18 @@ export default function FeeCalculator() {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const value = parseValue(display);
+    setError(null);
+    setNote(null);
+    setQuote(null);
 
     if (!abbr) return setError("Choose a state to price the file.");
+
+    // Coverage first: NY and partner states are served but not priced here, so
+    // they never fall through to a guessed number.
+    const status = coverageStatus(abbr);
+    if (status !== "priced") return setNote(status);
+
+    const value = parseValue(display);
     if (!value) return setError("Enter the home value.");
     if (value < HOME_VALUE_BOUNDS.min || value > HOME_VALUE_BOUNDS.max) {
       return setError(
@@ -74,7 +95,6 @@ export default function FeeCalculator() {
       );
     }
 
-    setError(null);
     setQuote(quoteFor(abbr, value));
   }
 
@@ -91,9 +111,8 @@ export default function FeeCalculator() {
             back to you on the phone, itemised the way they appear on the settlement
             statement.
           </p>
-          {/* The honesty line, relocated from the old coverage section. */}
           <p className="mt-8 font-mono text-eyebrow uppercase text-steel">
-            Every state but Hawaii and Iowa — ask us why.
+            Nationwide coverage. Select a state for an instant quote.
           </p>
         </div>
 
@@ -114,6 +133,7 @@ export default function FeeCalculator() {
                     onChange={(e) => {
                       setAbbr(e.target.value);
                       setQuote(null);
+                      setNote(null);
                     }}
                     className="h-14 w-full appearance-none border border-rule bg-surface px-4 text-base text-ink"
                   >
@@ -148,6 +168,7 @@ export default function FeeCalculator() {
                       onChange={(e) => {
                         setDisplay(groupDigits(e.target.value));
                         setQuote(null);
+                        setNote(null);
                       }}
                       className="tabular h-full w-full bg-transparent pr-4 text-base text-ink outline-none"
                     />
@@ -214,6 +235,32 @@ export default function FeeCalculator() {
                     Concept build — figures are illustrative and regionally tiered, not a
                     rate quote. Recording fees and transfer taxes vary by county and are
                     confirmed at commitment.
+                  </p>
+                </div>
+              )}
+
+              {note && (
+                <div className="mt-10 border-t border-rule pt-8">
+                  <p className="border-l-2 border-stamp pl-4 text-[0.98rem] leading-relaxed">
+                    {note === "ny" ? (
+                      <>
+                        New York is priced on a separate schedule. Send the file to{" "}
+                        <a href={`mailto:${ORDERS_EMAIL}`} className="rule-link text-stamp">
+                          {ORDERS_EMAIL}
+                        </a>{" "}
+                        and we&rsquo;ll return it same day.
+                      </>
+                    ) : (
+                      <>
+                        {SERVED_STATES.find((s) => s.abbr === abbr)?.name ?? "This state"} is
+                        served through a licensed partner, so it&rsquo;s quoted per file rather
+                        than from the standard schedule. Send the file to{" "}
+                        <a href={`mailto:${ORDERS_EMAIL}`} className="rule-link text-stamp">
+                          {ORDERS_EMAIL}
+                        </a>{" "}
+                        and we&rsquo;ll confirm same day.
+                      </>
+                    )}
                   </p>
                 </div>
               )}
