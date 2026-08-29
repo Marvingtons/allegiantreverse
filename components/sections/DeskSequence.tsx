@@ -559,7 +559,7 @@ function PinnedSequence() {
         <div
           ref={card}
           data-desk-card
-          className="absolute inset-y-0 left-[44vw] right-0 z-30 flex flex-col justify-between pb-[max(5vh,2.25rem)] pl-[6vw] pr-[4vw] pt-[max(9vh,5rem)]"
+          className="absolute inset-y-0 left-[44vw] right-0 z-30 flex flex-col justify-between pb-[max(5vh,2.25rem)] pl-[6vw] pr-[4vw] pt-[max(9vh,5rem)] [@media(max-height:800px)]:pt-[max(5vh,2.5rem)]"
         >
           <div className="w-full max-w-[40rem]">
             <div data-compose className="flex items-baseline justify-between border-b border-rule pb-4 opacity-0">
@@ -583,8 +583,7 @@ function PinnedSequence() {
                       keeps this out of the source heading tree entirely. */}
                   <div
                     data-name-block
-                    className="font-display leading-[0.92] tracking-[-0.03em] text-ink [overflow-wrap:anywhere]"
-                    style={{ fontSize: "clamp(3rem, 5vw, 5.5rem)" }}
+                    className="font-display text-[clamp(3rem,5vw,5.5rem)] leading-[0.92] tracking-[-0.03em] text-ink [overflow-wrap:anywhere] [@media(max-height:800px)]:text-[clamp(2.4rem,5vw,5.5rem)]"
                   >
                     <span className="block">{p.first}</span>
                     <span className="block">{p.last}</span>
