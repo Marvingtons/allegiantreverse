@@ -587,7 +587,10 @@
   .wwa-shell {
     position: relative;
     z-index: 2; /* between the back/mid clouds and the front pair */
-    max-width: 1500px;
+    /* On the site grid: same 88rem as .shell, so the statement section aligns
+       with nav / Services / Calculator / Footer instead of sitting 42px in.
+       The statement's own measure is held by .wwa-statement's max-width. */
+    max-width: theme("maxWidth.shell");
     margin-inline: auto;
     padding: 9vh 1.5rem 34vh;
   }
