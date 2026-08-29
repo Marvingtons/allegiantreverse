@@ -178,7 +178,7 @@ export default function FeeCalculator() {
 
               <button
                 type="submit"
-                className="mt-7 h-14 w-full bg-navy px-8 font-mono text-eyebrow uppercase tracking-[0.14em] text-paper transition-colors duration-300 ease-settle hover:bg-navy-2 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-navy/40 sm:w-auto"
+                className="mt-7 h-14 w-full bg-navy px-8 font-mono text-eyebrow uppercase tracking-[0.14em] text-paper transition-colors duration-300 ease-settle hover:bg-navy-2 sm:w-auto"
               >
                 Get instant quote
               </button>
