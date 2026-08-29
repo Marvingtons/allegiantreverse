@@ -5,14 +5,13 @@ import MotionProvider from "@/components/MotionProvider";
 import ReadyGate from "@/components/intro/ReadyGate";
 import "./globals.css";
 
-/** Display: editorial serif with sharp contrast. Headlines and numerals only. */
+/** Display: editorial serif with sharp contrast. Headlines and numerals only.
+    Nothing on the site uses weight 700, so Zodiak-Bold is not loaded. */
 const zodiak = localFont({
-  src: [
-    { path: "./fonts/Zodiak-Regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/Zodiak-Bold.woff2", weight: "700", style: "normal" },
-  ],
+  src: [{ path: "./fonts/Zodiak-Regular.woff2", weight: "400", style: "normal" }],
   variable: "--font-zodiak",
   display: "swap",
+  preload: true,
 });
 
 /** Body/UI. Set at an 18px base — see globals.css. */
@@ -24,6 +23,7 @@ const switzer = localFont({
   ],
   variable: "--font-switzer",
   display: "swap",
+  preload: true,
 });
 
 /** Data/labels: eyebrows, ALTA line numbers, stat labels, tabular figures. */
