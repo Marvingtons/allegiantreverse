@@ -156,6 +156,21 @@ export default function FeeCalculator() {
 
         <div className="lg:col-span-7">
           <div className="border border-rule bg-surface p-6 md:p-10">
+            {/* The instant quote needs JS; with it off the form is inert, so
+                offer the human routes instead of a dead box. */}
+            <noscript>
+              <p className="mb-6 border-l-2 border-stamp pl-4 text-[0.95rem] leading-relaxed">
+                Instant quotes need JavaScript. Call{" "}
+                <a href="tel:+18448088299" className="rule-link text-stamp">
+                  844.808.8299
+                </a>{" "}
+                or email{" "}
+                <a href={`mailto:${ORDERS_EMAIL}`} className="rule-link text-stamp">
+                  {ORDERS_EMAIL}
+                </a>{" "}
+                and we&rsquo;ll price your file.
+              </p>
+            </noscript>
             <form onSubmit={onSubmit} noValidate>
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>

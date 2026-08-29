@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { CINEMA_MQ } from "@/lib/globe.config";
 import { lockScroll, unlockScroll } from "@/lib/lenis";
 import {
   PATIENCE_MS,
@@ -23,7 +24,9 @@ import {
  * moment the globe can draw.
  */
 export default function ReadyGate() {
-  const [shown, setShown] = useState(true);
+  // Starts hidden so the no-JS payload never ships a frozen "00%"; the effect
+  // shows it only when the cinema will actually run.
+  const [shown, setShown] = useState(false);
   const [patient, setPatient] = useState(false);
   const numRef = useRef<HTMLSpanElement>(null);
   /** Displayed value, smoothed. Real progress arrives in bursts as each
@@ -33,6 +36,17 @@ export default function ReadyGate() {
 
   useEffect(() => {
     startSiteReady();
+
+    // Non-cinema (mobile, coarse pointer, reduced motion) mounts no globe, so
+    // there is nothing to wait for: clear the inline scroll-lock immediately —
+    // without this the page would stay locked until the 25s inline backstop —
+    // and never paint the counter (pure anxiety with no globe behind it).
+    if (!window.matchMedia(CINEMA_MQ).matches) {
+      unlockScroll();
+      return;
+    }
+
+    setShown(true);
     lockScroll();
 
     let raf = 0;

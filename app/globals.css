@@ -173,7 +173,7 @@
     gap: 0.35rem;
     pointer-events: none;
     font-family: var(--font-mono), ui-monospace, monospace;
-    color: rgb(var(--ink-rgb) / 0.55);
+    color: rgb(var(--ink-rgb) / 0.75); /* was 0.55 = 3.49:1 on the opening fog; now ~6.4:1 */
     animation: readyGateIn 0.5s ease both;
   }
 
@@ -189,10 +189,10 @@
   }
 
   .ready-gate-note {
-    font-size: 0.62rem;
+    font-size: 0.72rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgb(var(--ink-rgb) / 0.38);
+    color: rgb(var(--ink-rgb) / 0.70); /* was 0.38 = 2.24:1; now ~5.6:1 */
     animation: readyGateIn 0.6s ease both;
   }
 
