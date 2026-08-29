@@ -205,5 +205,13 @@ export function quoteFor(abbr: string, homeValue: number): Quote | null {
 
 export const HOME_VALUE_BOUNDS = { min: 50_000, max: 5_000_000 } as const;
 
+// Two decimals everywhere: a settlement statement carries the cents column on
+// every figure — the detail that makes a closer believe the output — and even
+// the contract value is shown to the cent on a real HUD-1.
 export const usd = (n: number) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });

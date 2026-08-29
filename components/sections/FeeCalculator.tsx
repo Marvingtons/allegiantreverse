@@ -74,6 +74,44 @@ export default function FeeCalculator() {
     return () => ctx.revert();
   }, [quote, reduced]);
 
+  // Bring the result into view once it lands — the total row otherwise sits
+  // below the fold at desktop heights, and a screen-reader user already hears
+  // it via the aria-live region.
+  useIsomorphicLayoutEffect(() => {
+    if (!quote && !note) return;
+    resultRef.current?.scrollIntoView({
+      block: "nearest",
+      behavior: reduced ? "auto" : "smooth",
+    });
+  }, [quote, note, reduced]);
+
+  const [copied, setCopied] = useState(false);
+
+  /** Copy the quote as a plain itemised block — the shape a closer pastes into
+      an email or an order. */
+  function copyQuote() {
+    if (!quote) return;
+    const rows = quote.lines.map((l) => `${l.line}  ${l.label.padEnd(34)} ${usd(l.amount)}`);
+    const body = [
+      `Estimate — ${quote.state.name} — ${usd(quote.homeValue)}`,
+      "",
+      ...rows,
+      "",
+      `TOTAL  Estimated title & settlement charges  ${usd(quote.total)}`,
+      "",
+      "Concept build — illustrative figures, not a rate quote.",
+    ].join("\n");
+    // Optional chain through .then too: a browser without navigator.clipboard
+    // returns undefined here rather than throwing on .then.
+    navigator.clipboard?.writeText(body)?.then(
+      () => {
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 2000);
+      },
+      () => {}
+    );
+  }
+
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -211,7 +249,9 @@ export default function FeeCalculator() {
                         {l.line}
                       </span>
                       <span className="flex-1">{l.label}</span>
-                      <span className="tabular font-mono text-[0.95rem]">{usd(l.amount)}</span>
+                      <span className="tabular w-28 shrink-0 text-right font-mono text-[0.95rem]">
+                        {usd(l.amount)}
+                      </span>
                     </div>
                   ))}
 
@@ -226,9 +266,29 @@ export default function FeeCalculator() {
                     <span className="flex-1 font-display text-[1.35rem]">
                       Estimated title &amp; settlement charges
                     </span>
-                    <span className="tabular font-display text-[1.6rem] text-stamp">
+                    <span className="tabular shrink-0 text-right font-display text-[1.6rem] text-stamp">
                       {usd(quote.total)}
                     </span>
+                  </div>
+
+                  {/* The quote is a step in a workflow, not a dead end: price,
+                      then open the order or take the numbers with you. */}
+                  <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <a
+                      href={`mailto:${ORDERS_EMAIL}?subject=${encodeURIComponent(
+                        `New order — ${quote.state.name}`
+                      )}`}
+                      className="inline-flex h-12 items-center justify-center bg-navy px-6 font-mono text-eyebrow uppercase tracking-[0.14em] text-paper transition-colors duration-300 ease-settle hover:bg-navy-2"
+                    >
+                      Open an order&nbsp;→
+                    </a>
+                    <button
+                      type="button"
+                      onClick={copyQuote}
+                      className="inline-flex h-12 items-center justify-center border border-rule px-6 font-mono text-eyebrow uppercase tracking-[0.14em] text-ink transition-colors duration-300 ease-settle hover:bg-stamp-soft"
+                    >
+                      {copied ? "Copied ✓" : "Copy quote"}
+                    </button>
                   </div>
 
                   <p className="mt-5 text-[0.85rem] leading-relaxed text-muted">
