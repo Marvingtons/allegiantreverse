@@ -34,12 +34,38 @@ const splineMono = Spline_Sans_Mono({
   display: "swap",
 });
 
+// The link is the pitch's first impression — it gets forwarded and pasted into
+// Outlook/Teams, so the unfurl has to carry the brand. 2003 is the team's time
+// in reverse, not the company's age (ARS was founded 2016); keep the two apart
+// in anything quotable. Coverage is ARS's own word, "Nationwide", not a count.
 export const metadata: Metadata = {
+  metadataBase: new URL("https://allegiant-reverse-services.vercel.app"),
   title: "Allegiant Reverse Services — Reverse, done right.",
-  // 2003 is the team's time in reverse, not the company's age — ARS was founded
-  // in 2016. Keep the two apart in anything quotable, search results included.
   description:
-    "Reverse mortgage title and settlement services in 48 states. 130,000+ closings, by a team that has done nothing but reverse since 2003. Backed by Stewart Title.",
+    "Title & settlement for reverse mortgages. One product since 2003. Nationwide coverage, instant fee quotes, and a team lenders know by name.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Allegiant Reverse Services",
+    title: "Allegiant Reverse Services — Reverse, done right.",
+    description:
+      "Title & settlement for reverse mortgages. One product since 2003.",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Allegiant Reverse Services" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Allegiant Reverse Services — Reverse, done right.",
+    description: "Title & settlement for reverse mortgages. One product since 2003.",
+    images: ["/og.jpg"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -71,6 +97,34 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-paper font-sans text-base text-ink antialiased">
+        {/* Organization structured data — the address, line and profiles ARS
+            publishes, so search and social know who this is. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Allegiant Reverse Services",
+              url: "https://allegiantreverse.com",
+              logo: "https://allegiant-reverse-services.vercel.app/apple-icon.png",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "905 Highland Pointe Dr., Suite 150",
+                addressLocality: "Roseville",
+                addressRegion: "CA",
+                postalCode: "95678",
+                addressCountry: "US",
+              },
+              telephone: "+1-844-808-8299",
+              sameAs: [
+                "https://www.linkedin.com/company/7950001",
+                "https://www.facebook.com/AllegiantReverse/",
+                "https://www.instagram.com/allegiantreverse/",
+              ],
+            }),
+          }}
+        />
         {/* Keyboard users land here first — the nav is four links deep. */}
         <a
           href="#main"
