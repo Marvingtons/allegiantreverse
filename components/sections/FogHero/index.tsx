@@ -540,9 +540,13 @@ export default function FogHero() {
         <div style={{ height: `${GLOBE_PIN_VH + COVER_VH}vh` }} aria-hidden />
       </section>
 
-      {/* ---- Fallback (mobile, touch, reduced motion — and no-JS) ---------- */}
+      {/* ---- Fallback (mobile, touch, reduced motion — and no-JS) ----------
+          The cinema above carries the page's single <h1>; this fallback (still
+          in the DOM, CSS-hidden on desktop) renders its headline as a <p> so
+          there is exactly one h1 in the source. The WebGL-failure branch below
+          renders <Hero/> with its default as="h1", since the cinema is gone. */}
       <div className="fog-fallback">
-        <Hero />
+        <Hero as="p" />
       </div>
     </div>
   );

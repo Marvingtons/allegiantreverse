@@ -14,12 +14,19 @@ import RevealLines from "@/components/ui/RevealLines";
  * (1.1s, power3.out, 0.08s stagger), then the three stats count. Nothing blocks
  * first paint — the headline and the final stat values are in the server HTML.
  */
-export default function Hero() {
+/**
+ * `as` controls the headline's element. When the cinema is present in the DOM
+ * (mobile hides it with CSS, but it still carries the page's single <h1>), this
+ * fallback renders its headline as a <p> so the document has exactly one h1.
+ * On the WebGL-failure branch the cinema is not rendered at all, so FogHero
+ * passes as="h1" to make this the page heading.
+ */
+export default function Hero({ as = "h1" }: { as?: "h1" | "p" }) {
   return (
     <section className="grain relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-16 pt-32 md:pb-20">
       <div className="shell">
         <RevealLines
-          as="h1"
+          as={as}
           trigger="load"
           delay={0.15}
           className="font-display text-display font-normal"

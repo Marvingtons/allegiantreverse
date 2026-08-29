@@ -449,7 +449,6 @@ function PinnedSequence() {
   const hold = (i: number) => { override.current = i; setActiveIndex(i); };
   const release = () => { override.current = null; };
 
-  const shown = team[activeIndex];
   const rob = team[0];
 
   return (
@@ -527,7 +526,9 @@ function PinnedSequence() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={duotoneSrc(p)}
-                  alt={portraitAlt(p)}
+                  // Decorative here: this crossfading stack is the visual layer,
+                  // and the sr-only roster <ol> already names every person.
+                  alt=""
                   loading="lazy"
                   decoding="async"
                   className="absolute inset-0 h-full w-full object-cover"
@@ -577,14 +578,17 @@ function PinnedSequence() {
                   className="col-start-1 row-start-1 will-change-[opacity,transform]"
                   style={{ opacity: i === 0 ? 1 : 0 }}
                 >
-                  <h3
+                  {/* Not a heading: the whole block is aria-hidden and the real
+                      roster headings live in the sr-only <ol> below. A <div>
+                      keeps this out of the source heading tree entirely. */}
+                  <div
                     data-name-block
                     className="font-display leading-[0.92] tracking-[-0.03em] text-ink [overflow-wrap:anywhere]"
                     style={{ fontSize: "clamp(3rem, 5vw, 5.5rem)" }}
                   >
                     <span className="block">{p.first}</span>
                     <span className="block">{p.last}</span>
-                  </h3>
+                  </div>
                   <div className="mt-5">
                     <p
                       className={clsx(
@@ -601,9 +605,23 @@ function PinnedSequence() {
               ))}
             </div>
 
-            <p className="sr-only" aria-live="polite">
-              {fullName(shown)}. {shown.tenureTag}. {shown.title}. {shown.bio}
-            </p>
+            {/* The semantic roster: a complete, navigable list of the seven,
+                lives once here inside the pinned layout (which CSS hides on
+                mobile, where the stacked layout below carries the real
+                headings). The visual name blocks above are aria-hidden, so
+                this is the single heading source for a desktop screen reader —
+                replacing the old aria-live region that re-announced on every
+                scroll tick. */}
+            <ol className="sr-only">
+              {team.map((p) => (
+                <li key={p.id} id={`person-${p.id}`}>
+                  <h3>{fullName(p)}</h3>
+                  <p>
+                    {p.title}. {p.tenureTag}. {p.bio}
+                  </p>
+                </li>
+              ))}
+            </ol>
           </div>
 
           <div className="w-full max-w-[40rem]">
@@ -621,6 +639,7 @@ function PinnedSequence() {
                       type="button"
                       aria-pressed={on}
                       aria-current={on ? "true" : undefined}
+                      aria-controls={`person-${p.id}`}
                       onMouseEnter={() => hold(i)}
                       onFocus={() => hold(i)}
                       onBlur={release}
