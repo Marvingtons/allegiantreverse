@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Spline_Sans_Mono } from "next/font/google";
 import MotionProvider from "@/components/MotionProvider";
@@ -59,13 +59,23 @@ export const metadata: Metadata = {
     description: "Title & settlement for reverse mortgages. One product since 2003.",
     images: ["/og.jpg"],
   },
+  // Config-based icon links (assets live in public/). Next's app/icon.* file
+  // convention cannot emit an SVG and a PNG icon link at the same time — it
+  // drops the SVG for the raster — so the set is declared here explicitly:
+  // .ico for legacy, .svg for modern browsers, .png as the raster fallback.
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
+};
+
+/** theme-color = brand ink, so the mobile browser chrome matches the footer. */
+export const viewport: Viewport = {
+  themeColor: "#1F2124",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -108,7 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@type": "Organization",
               name: "Allegiant Reverse Services",
               url: "https://allegiantreverse.com",
-              logo: "https://allegiant-reverse-services.vercel.app/apple-icon.png",
+              logo: "https://allegiant-reverse-services.vercel.app/icon-512.png",
               address: {
                 "@type": "PostalAddress",
                 streetAddress: "905 Highland Pointe Dr., Suite 150",
